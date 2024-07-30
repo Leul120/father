@@ -9,7 +9,7 @@ import { useInView } from "react-intersection-observer";
 import gsap from "gsap";
 import VerticalNavbar from "./Navigation";
 import './App.css'
-
+import { useNavigate } from "react-router-dom";
 const { Title, Text, Paragraph } = Typography;
 
 const ProfessionalProfile = () => {
@@ -130,7 +130,7 @@ const ProfessionalProfile = () => {
       );
     });
   };
-
+const navigate=useNavigate()
   const handleIntersection = (inView, entry, backgroundClass) => {
     if (inView) {
       setBackground(backgroundClass);
@@ -191,7 +191,7 @@ const ProfessionalProfile = () => {
 
   return (
     <div className={`min-h-screen pt-4 relative nineth p-2 overflow-hidden ${background} transition-all duration-500`}>
-   <Link to='/contact-us'> <Button className="fixed bottom-300">Contact Me</Button></Link>
+    <div onClick={()=>navigate('/contact-us')} className="p-1 text-indigo-600 fixed border border-blue-500 rounded-lg">Contact Me</div>
       {token && <VerticalNavbar />}
       <div className="absolute inset-0 -z-10 transition-transform duration-500">
         <div className="w-full  h-full opacity-40"></div>

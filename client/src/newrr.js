@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "tailwindcss/tailwind.css";
-import { Card, List, Typography, Space, Progress, Divider, Avatar, Tag } from "antd";
+import { Card, List, Typography, Space, Progress, Divider, Avatar, Tag, Button } from "antd";
 import { PhoneOutlined, MailOutlined, GlobalOutlined, UserOutlined } from "@ant-design/icons";
 import { motion, useAnimation } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -171,7 +171,7 @@ const ProfessionalProfile = () => {
           {name}
         </Title>
       </motion.div>
-      <Text className="text-xl ">{title}</Text>
+      <Text className="text-xl ">({title})</Text>
       <div className="flex space-x-4 mt-2 text-white">
         <Text>
           <PhoneOutlined className="mr-2" />
@@ -191,6 +191,7 @@ const ProfessionalProfile = () => {
 
   return (
     <div className={`min-h-screen pt-4 relative nineth p-2 overflow-hidden ${background} transition-all duration-500`}>
+   <Link to='/contact-us'> <Button className="fixed bottom-300">Contact Me</Button></Link>
       {token && <VerticalNavbar />}
       <div className="absolute inset-0 -z-10 transition-transform duration-500">
         <div className="w-full  h-full opacity-40"></div>
@@ -263,7 +264,7 @@ const ProfessionalProfile = () => {
                     whileHover={{ scale: 1.1, rotate: 10 }}
                     className="cursor-pointer"
                   >
-                    <Tag color="gold" className="p-3 text-2xl">{skill.skill}</Tag>
+                    <Tag color="" className="p-3 text-lg">{skill.skill}</Tag>
                   </motion.div>
                 ))}
               </Space>
@@ -278,7 +279,7 @@ const ProfessionalProfile = () => {
                 renderItem={(item) => (
                   <div className="list-item">
                     <List.Item>
-                      <Tag color="blue" className="p-3 text-2xl">{item.language}</Tag>
+                      <Tag color="blue" className="p-3 text-lg">{item.language}</Tag>
                     </List.Item>
                   </div>
                 )}
@@ -329,7 +330,7 @@ const ProfessionalProfile = () => {
       <div className="card" key={index}>
         <div className="card-content">
           <Title level={5}>{item.title}</Title>
-          <Text>{item.journal}</Text>
+          <Text>{item.journal}</Text><br />
           <Text>{item.year}</Text>
         </div>
         <div className="card-hover-content">

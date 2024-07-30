@@ -3,16 +3,14 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { useForm, Controller } from 'react-hook-form';
 import { message } from 'antd';
 import axios from 'axios';
-import { AppContext } from './App';
+
 
 const ContactUs = () => {
   const [loading, setLoading] = useState(false);
-  const { setMenu } = useContext(AppContext);
+  
   const { control, handleSubmit, reset, formState: { errors } } = useForm();
 
-  useEffect(() => {
-    setMenu("Contact-us");
-  }, [setMenu]);
+ 
 
   const submitData = async (data) => {
     try {

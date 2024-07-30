@@ -1,0 +1,204 @@
+import React, { useEffect, useState } from 'react';
+import { Form, Input, Button, Card, List, message, Modal, DatePicker, InputNumber } from 'antd';
+import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import moment from 'moment';
+import axios from 'axios';
+import {jwtDecode} from 'jwt-decode';
+import { Link } from 'react-router-dom';
+
+const EducationForm = () => {
+  const [educationList, setEducationList] = useState([]);
+  const [editingEducation, setEditingEducation] = useState(null);
+  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const token = window.localStorage.getItem('token');
+  const decoded = jwtDecode(token);
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    fetchEducation();
+  }, []);
+
+  useEffect(() => {
+    if (editingEducation) {
+      form.setFieldsValue({
+        ...editingEducation,
+        graduationDate: moment(editingEducation.graduationDate),
+      });
+    } else {
+      form.resetFields();
+    }
+  }, [editingEducation, form]);
+
+  const fetchEducation = async () => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${decoded.id}`);
+      setEducationList(response.data.user.education.map(edu => ({
+        ...edu,
+        graduationDate: moment(edu.graduationDate),
+      })));
+    } catch (error) {
+      message.error('Failed to fetch education');
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`${process.env.REACT_APP_URL}/delete-education/${decoded.id}/${id}`);
+      message.success('Education deleted successfully');
+      fetchEducation();
+    } catch (error) {
+      message.error('Failed to delete education');
+    }
+  };
+
+  const handleEdit = (education) => {
+    setEditingEducation(education);
+    setVisible(true);
+  };
+
+  const handleCancel = () => {
+    setEditingEducation(null);
+    setVisible(false);
+  };
+
+  const handleSave = async (values) => {
+    setLoading(true);
+    const result = { education: [{ ...values, graduationDate: values.graduationDate.format('YYYY-MM-DD') }] };
+
+    try {
+      if (editingEducation) {
+        await axios.put(`${process.env.REACT_APP_URL}/user/update-education/${decoded.id}/${editingEducation._id}`, result.education[0]);
+        message.success('Education updated successfully');
+      } else {
+        await axios.post(`${process.env.REACT_APP_URL}/post-education/${decoded.id}`, result);
+        message.success('Education added successfully');
+      }
+      fetchEducation();
+      setVisible(false);
+      setEditingEducation(null);
+    } catch (error) {
+      message.error('Failed to save education');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className='px-3 pt-3 h-full bg-stone-50 min-h-screen'>
+      <Card bordered={false} title="Education">
+        <List
+          itemLayout="horizontal"
+          dataSource={educationList}
+          renderItem={(edu) => (
+            <List.Item
+              actions={[
+                <Button
+                  type="link"
+                  icon={<EditOutlined />}
+                  onClick={() => handleEdit(edu)}
+                />,
+                <Button
+                  type="link"
+                  icon={<DeleteOutlined />}
+                  onClick={() => handleDelete(edu._id)}
+                />,
+              ]}
+            >
+              <List.Item.Meta
+                title={`${edu.degree} in ${edu.field}`}
+                description={`${edu.institution}, ${edu.location} (GPA: ${edu.gpa})`}
+              />
+              <div>Graduated: {moment(edu.graduationDate).format('YYYY-MM-DD')}</div>
+              <div>Thesis: {edu.thesis}</div>
+            </List.Item>
+          )}
+        />
+        <Button
+          type="dashed"
+          icon={<PlusOutlined />}
+          onClick={() => setVisible(true)}
+          style={{ marginTop: 16 }}
+        >
+          Add Education
+        </Button>
+        <Link to='/memberships'>
+          <Button type="primary" style={{ marginLeft: 16 }}>
+            Add Memberships and Affiliations
+          </Button>
+        </Link>
+      </Card>
+
+      <Modal
+        title={editingEducation ? 'Edit Education' : 'Add Education'}
+        visible={visible}
+        onCancel={handleCancel}
+        footer={null}
+      >
+        <Form
+          layout="vertical"
+          onFinish={handleSave}
+          form={form}
+          initialValues={editingEducation || { degree: '', field: '', institution: '', location: '', graduationDate: moment(), gpa: 0, thesis: '' }}
+        >
+          <Form.Item
+            label="Degree"
+            name="degree"
+            rules={[{ required: true, message: 'Please enter the degree' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Field"
+            name="field"
+            rules={[{ required: true, message: 'Please enter the field of study' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Institution"
+            name="institution"
+            rules={[{ required: true, message: 'Please enter the institution' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Location"
+            name="location"
+            rules={[{ required: true, message: 'Please enter the location' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Graduation Date"
+            name="graduationDate"
+            rules={[{ required: true, message: 'Please select the graduation date' }]}
+          >
+            <DatePicker format="YYYY-MM-DD" />
+          </Form.Item>
+          <Form.Item
+            label="GPA"
+            name="gpa"
+            rules={[{ required: true, message: 'Please enter the GPA' }]}
+          >
+            <InputNumber min={0} max={4} step={0.1} />
+          </Form.Item>
+          <Form.Item
+            label="Thesis"
+            name="thesis"
+          >
+            <Input.TextArea rows={4} />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" loading={loading}>
+              {editingEducation ? 'Update' : 'Add'}
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
+    </div>
+  );
+};
+
+export default EducationForm;

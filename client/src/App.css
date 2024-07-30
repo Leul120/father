@@ -1,0 +1,146 @@
+.smt{
+    background-image: url('https://img.freepik.com/free-vector/dark-background-gradient-geometric-shapes_23-2148430534.jpg?t=st=1722315638~exp=1722319238~hmac=4dc81e7f43c0e3cea84a4978eaf2bd8ef167009e0478ada8fb0148980942f638&w=900');
+    background-repeat: no-repeat;
+    height: 100;
+    min-height: 200%;
+    margin: 0; /* Remove default margin */
+    padding-bottom: 2px;
+    background-size: cover; /* Cover the entire container */
+    background-position: center;
+}
+.second{
+   background-image: url("https://img.freepik.com/free-vector/gradient-geometric-shapes-background_23-2148411559.jpg?t=st=1722315658~exp=1722319258~hmac=ee8c50ac306e3a7298babf8e6fd1b840c7fc268a51056a519c5f6bfaaf949cf5&w=900");
+    background-repeat: no-repeat;
+    height: 100;
+    min-height: 200%;
+    margin: 0; /* Remove default margin */
+    padding-bottom: 2px;
+    background-size: cover; /* Cover the entire container */
+    background-position: center;
+   
+}
+.third{
+   background-image: url("https://img.freepik.com/free-vector/gradient-style-shapes-dark-background_23-2148426670.jpg?t=st=1722315675~exp=1722319275~hmac=d88fac8f15aeb173ed16d6c0287bf275ee559711c288060f9839039d3c5ee3ed&w=900");
+    background-repeat: no-repeat;
+    height: 100;
+    min-height: 200%;
+    margin: 0; /* Remove default margin */
+    padding-bottom: 2px;
+    background-size: cover; /* Cover the entire container */
+    background-position: center;
+   
+}
+.fourth{
+   background-image: url("https://img.freepik.com/free-vector/gradient-geometric-purple-shapes-dark-background_23-2148423872.jpg?t=st=1722315696~exp=1722319296~hmac=ccff912408d1b1a552631065abf33353203a44d81d5cf862818af1441ce6f606&w=900");
+    background-repeat: no-repeat;
+    height: 100;
+    min-height: 200%;
+    margin: 0; /* Remove default margin */
+    padding-bottom: 2px;
+    background-size: cover; /* Cover the entire container */
+    background-position: center;
+   
+}
+.fifth{
+   background-image: url("https://img.freepik.com/free-vector/gradient-geometric-shapes-dark-background_23-2148434980.jpg?t=st=1722315744~exp=1722319344~hmac=7c66dd3b2761df7aff56241ef5271981e649cf0e30d3b2897247ccfaa9f28ac4&w=900");
+    background-repeat: no-repeat;
+    height: 100;
+    min-height: 200%;
+    margin: 0; /* Remove default margin */
+    padding-bottom: 2px;
+    background-size: cover; /* Cover the entire container */
+    background-position: center;
+   
+}
+.sixth{
+   background-image: url("https://img.freepik.com/free-vector/dark-background-gradient-geometric-shapes_23-2148430534.jpg?t=st=1722315638~exp=1722319238~hmac=4dc81e7f43c0e3cea84a4978eaf2bd8ef167009e0478ada8fb0148980942f638&w=900");
+    background-repeat: no-repeat;
+    height: 100;
+    min-height: 200%;
+    margin: 0; /* Remove default margin */
+    padding-bottom: 2px;
+    background-size: cover; /* Cover the entire container */
+    background-position: center;
+   
+}
+.seventh{
+   background-image: url("https://img.freepik.com/free-vector/gradient-geometric-shapes-dark-background_23-2148434188.jpg?t=st=1722315584~exp=1722319184~hmac=108f8c123a5f54143b7fc954f863f859a09b7dfd8d4544800732ac5f2121b752&w=900");
+    background-repeat: no-repeat;
+    height: 100;
+    min-height: 200%;
+    margin: 0; /* Remove default margin */
+    padding-bottom: 2px;
+    background-size: cover; /* Cover the entire container */
+    background-position: center;
+   
+}
+.eighth{
+   background-image: url("https://img.freepik.com/free-vector/gradient-geometric-shapes-dark-background_23-2148435100.jpg?t=st=1722315616~exp=1722319216~hmac=d2843a5ce22cc0ec2cb0134fde8db4270938572351a41dc7d7dee0e7a1762bc5&w=900");
+    background-repeat: no-repeat;
+    height: 100;
+    min-height: 200%;
+    margin: 0; /* Remove default margin */
+    padding-bottom: 2px;
+    background-size: cover; /* Cover the entire container */
+    background-position: center;
+   
+}
+.nineth{
+   background-image: url("https://images.unsplash.com/photo-1552917690-2f32ed7c0823?q=80&w=1938&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+    background-repeat: no-repeat;
+    height: 100;
+    min-height: 200%;
+    margin: 0; /* Remove default margin */
+    padding-bottom: 2px;
+    background-size: cover; /* Cover the entire container */
+    background-position: center;
+   
+}
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  grid-gap: 20px;
+  
+}
+
+.card {
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  height: 200px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: box-shadow 0.3s ease-in-out;
+  position: relative;
+}
+
+.card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  
+}
+
+.card-content,
+.card-hover-content {
+  padding: 16px;
+}
+
+.card-hover-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fbfbfb;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  opacity: 0;
+  padding: 16px;
+  
+  transition: opacity 0.3s ease-in-out;
+}
+
+.card:hover .card-hover-content {
+  opacity: 1;
+}
+

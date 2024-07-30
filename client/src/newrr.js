@@ -191,7 +191,7 @@ const navigate=useNavigate()
 
   return (
     <div className={`min-h-screen pt-4 relative nineth p-2 overflow-hidden ${background} transition-all duration-500`}>
-    <div onClick={()=>navigate('/contact-us')} className="p-1 text-indigo-600 fixed border border-blue-500 rounded-lg">Contact Me</div>
+    
       {token && <VerticalNavbar />}
       <div className="absolute inset-0 -z-10 transition-transform duration-500">
         <div className="w-full  h-full opacity-40"></div>
@@ -204,6 +204,7 @@ const navigate=useNavigate()
       >
         <div className="shadow-lg rounded-lg overflow-hidden">
           <div>
+          <Button onClick={()=>navigate('/contact-us')} className="   float-start  rounded-lg fixed cursor-pointer">Contact Me</Button>
             <HeaderSection name={user?.name} title={user?.title} contact={user?.contact} />
 
             <Section title="Summary" backgroundClass="bg1">

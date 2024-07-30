@@ -10,7 +10,7 @@ const AwardsForm = () => {
   const [awards, setAwards] = useState([]);
   const [editingAward, setEditingAward] = useState(null);
   const [visible, setVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   const token = window.localStorage.getItem('token');
   const decoded = jwtDecode(token);

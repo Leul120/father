@@ -31,7 +31,7 @@ const VerticalNavbar = () => {
           <Link to="/skills">Skills</Link>
         </Menu.Item>
         <Menu.Item key="education" icon={<BookOutlined />}>
-          <Link to="/education">Education</Link>
+          <Link to="/educations">Education</Link>
         </Menu.Item>
         <Menu.Item key="languages" icon={<GlobalOutlined />}>
           <Link to="/languages">Languages</Link>

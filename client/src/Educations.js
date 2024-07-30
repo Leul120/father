@@ -69,7 +69,7 @@ const EducationForm = () => {
 
     try {
       if (editingEducation) {
-        await axios.put(`${process.env.REACT_APP_URL}/user/update-education/${decoded.id}/${editingEducation._id}`, result.education[0]);
+        await axios.put(`${process.env.REACT_APP_URL}/update-education/${decoded.id}/${editingEducation._id}`, result.education[0]);
         message.success('Education updated successfully');
       } else {
         await axios.post(`${process.env.REACT_APP_URL}/post-education/${decoded.id}`, result);

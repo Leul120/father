@@ -28,7 +28,7 @@ const ContactUs = () => {
 
   return (
     <div className='flex items-center justify-center w-full min-h-screen '>
-      <div className='p-12 bg-white/10 backdrop-blur-2xl text-white rounded-xl shadow-lg max-w-md w-full'>
+      <div className='p-12 bg-white/10 backdrop-blur-2xl rounded-xl shadow-lg max-w-md w-full'>
         <h1 className='text-3xl font-bold text-center text-sky-500 mb-6'>Contact</h1>
         <form onSubmit={handleSubmit(submitData)} className='space-y-5'>
           <div className='flex gap-4'>
@@ -50,7 +50,7 @@ const ContactUs = () => {
               rules={{ required: true }}
               render={({ field }) => (
                 <input
-                  className={`w-full border-b-2 bg-transparent border-gray-400 px-3 py-2 text-white focus:outline-none focus:border-purple-400 ${errors.lastName ? 'border-red-500' : ''}`}
+                  className={`w-full border-b-2 bg-transparent border-gray-400 px-3 py-2  focus:outline-none focus:border-purple-400 ${errors.lastName ? 'border-red-500' : ''}`}
                   placeholder='Last Name'
                   {...field}
                 />
@@ -63,7 +63,7 @@ const ContactUs = () => {
             rules={{ required: true, pattern: /^\S+@\S+$/i }}
             render={({ field }) => (
               <input
-                className={`w-full border-b-2 bg-transparent border-gray-400  px-3 py-2 text-white focus:outline-none focus:border-purple-400 ${errors.email ? 'border-red-500' : ''}`}
+                className={`w-full border-b-2 bg-transparent border-gray-400  px-3 py-2 focus:outline-none focus:border-purple-400 ${errors.email ? 'border-red-500' : ''}`}
                 placeholder='Email'
                 {...field}
               />
@@ -75,7 +75,7 @@ const ContactUs = () => {
             rules={{ required: true, pattern: /^\d+$/ }}
             render={({ field }) => (
               <input
-                className={`w-full border-b-2 bg-transparent border-gray-400  px-3 py-2 text-white focus:outline-none focus:border-purple-400 ${errors.phoneNumber ? 'border-red-500' : ''}`}
+                className={`w-full border-b-2 bg-transparent border-gray-400  px-3 py-2  focus:outline-none focus:border-purple-400 ${errors.phoneNumber ? 'border-red-500' : ''}`}
                 placeholder='Phone Number'
                 {...field}
               />
@@ -87,7 +87,7 @@ const ContactUs = () => {
             rules={{ required: true }}
             render={({ field }) => (
               <textarea
-                className={`w-full border-2 bg-transparent border-gray-400 rounded-lg px-3 py-2 h-44 text-white focus:outline-none focus:border-purple-400 ${errors.description ? 'border-red-500' : ''}`}
+                className={`w-full border-2 bg-transparent border-gray-400 rounded-lg px-3 py-2 h-44  focus:outline-none focus:border-purple-400 ${errors.description ? 'border-red-500' : ''}`}
                 placeholder='Description'
                 {...field}
               />
@@ -95,7 +95,7 @@ const ContactUs = () => {
           />
           <button
             type='submit'
-            className={`w-full h-10 rounded-full flex items-center justify-center transition duration-300 ease-in-out text-white ${loading ? 'bg-gray-600 cursor-not-allowed' : 'bg-purple-700 hover:bg-purple-600'}`}
+            className={`w-full h-10 rounded-full flex items-center justify-center transition duration-300 ease-in-out  ${loading ? 'bg-gray-600 cursor-not-allowed' : 'bg-purple-700 hover:bg-purple-600'}`}
             disabled={loading}
           >
             {loading ? (

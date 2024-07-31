@@ -157,7 +157,8 @@ const navigate=useNavigate()
                       <Text>{item.institution}, {item.location}</Text>
                       <Paragraph>{item.description}</Paragraph>
                       <Text type="secondary">
-                        {new Date(item.startDate).toLocaleDateString()} - {item.endDate? new Date(item.endDate).toLocaleDateString() : "present"}
+                      {console.log(item.endDate)}
+                        {new Date(item.startDate).toLocaleDateString()} - {item.endDate!=="1800-07-16T00:00:00.000Z"? new Date(item.endDate).toLocaleDateString() : "Present"}
                       </Text>
                     </List.Item>
                   </div>

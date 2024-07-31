@@ -39,7 +39,7 @@ const PublicationForm = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_URL}/user/delete-publication/${decoded.id}/${id}`);
+      await axios.delete(`${process.env.REACT_APP_URL}/delete-publication/${decoded.id}/${id}`);
       message.success('Publication deleted successfully');
       fetchPublications();
     } catch (error) {
@@ -63,7 +63,7 @@ const PublicationForm = () => {
 
     try {
       if (editingPublication) {
-        await axios.put(`${process.env.REACT_APP_URL}/user/update-publication/${decoded.id}/${editingPublication._id}`, result.publications[0]);
+        await axios.put(`${process.env.REACT_APP_URL}/update-publication/${decoded.id}/${editingPublication._id}`, result.publications[0]);
         message.success('Publication updated successfully');
       } else {
         await axios.post(`${process.env.REACT_APP_URL}/post-publication${decoded.id}`, result);

@@ -31,97 +31,7 @@ const ProfessionalProfile = () => {
       console.log(error);
     }
   };
-  const professional = {
-    name: "John Doe",
-    title: "Senior Researcher",
-    contact: {
-      phone: "123-456-7890",
-      email: "johndoe@example.com",
-      address: "123 Main St",
-      institution: "Research Institute",
-      city: "Anytown",
-      country: "USA",
-    },
-    summary: "Experienced researcher with expertise in data science and machine learning.",
-    experiences: [
-      {
-        position: "Data Scientist",
-        institution: "Tech Corp",
-        location: "New York, NY",
-        startDate: "2019-01-01",
-        endDate: "2023-06-30",
-        description: "Worked on developing machine learning models.",
-      },
-      {
-        position: "Research Assistant",
-        institution: "University of Science",
-        location: "Boston, MA",
-        startDate: "2015-09-01",
-        endDate: "2018-12-31",
-        description: "Assisted in data analysis for various projects.",
-      },
-    ],
-    skills: [
-      { skill: "Python", level: 90 },
-      { skill: "Machine Learning", level: 85 },
-    ],
-    education: [
-      {
-        degree: "Ph.D.",
-        field: "Computer Science",
-        institution: "University of Science",
-        location: "Boston, MA",
-        graduationDate: "2018-06-01",
-        gpa: 3.9,
-        thesis: "Thesis on Deep Learning Algorithms.",
-      },
-    ],
-    languages: [
-      { language: "English", proficiency: "Native" },
-      { language: "Spanish", proficiency: "Fluent" },
-    ],
-    certificates: [
-      {
-        title: "Machine Learning Certification",
-        institution: "Coursera",
-        date: "2020-04-15",
-        description: "Completed an online course on machine learning.",
-      },
-    ],
-    awards: [
-      {
-        title: "Best Paper Award",
-        institution: "AI Conference",
-        year: 2021,
-        description: "Received the best paper award at the AI conference.",
-      },
-    ],
-    publications: [
-      {
-        title: "Deep Learning in AI",
-        journal: "Journal of AI Research",
-        volume: "45",
-        pages: "123-145",
-        year: 2021,
-        url: "https://example.com/deep-learning-in-ai",
-        doi: "10.1234/jair.2021.12345",
-      },
-    ],
-  };
-
-  const {
-    name,
-    title,
-    contact,
-    summary,
-    experiences,
-    skills,
-    education,
-    languages,
-    certificates,
-    awards,
-    publications,
-  } = professional;
+  
 
   const animateListItems = () => {
     gsap.utils.toArray(".list-item").forEach(item => {
@@ -172,7 +82,7 @@ const navigate=useNavigate()
           {name}
         </Title>
       </motion.div>
-      <Text className="text-xl ">({title})</Text>
+      <Text className="text-xl ">{title}</Text>
       <div className="flex space-x-4 mt-2 text-white">
         <Text>
           <PhoneOutlined className="mr-2" />

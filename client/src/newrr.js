@@ -131,7 +131,7 @@ const navigate=useNavigate()
     <Section title="Education" backgroundClass="bg4">
               <List
                 itemLayout="vertical"
-                dataSource={user?.education}
+                dataSource={user?.educations}
                 renderItem={(item) => (
                   <div className="list-item">
                     <List.Item>

@@ -4,7 +4,7 @@ const { login, signup } = require('../controllers/authController')
 const router=express.Router()
 
 router.route("/get-user/:userID").get(getUser)
-router.route("/post-user").get(postUser)
+router.route("/post-user").post(postUser)
 router.route("/post-award/:userID").post(PostAward)
 router.route("/post-certificate/:userID").post(PostCertificate)
 router.route("/post-education/:userID").post(PostEducation)

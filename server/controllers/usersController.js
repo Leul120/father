@@ -3,7 +3,10 @@ const catchAsync = require('../utils/catchAsync')
 const Users=require('../models/userModel')
 
 
-
+const postUser=catchAsync(async(req,res)=>{
+    const user=await Users.create(req.body)
+    res.status(200).json({user})
+})
 const getUser = catchAsync(async (req, res) => {
     const userID = req.params.userID;
     const user = await Users.findOne({ _id: userID });
@@ -233,4 +236,4 @@ const deleteSkill=catchAsync(async (req,res)=>{
         await Users.findOneAndDelete({_id:userID},{$pull:{skills:{_id:skillID}}})
         res.status(200).json(`deleted successfully`)
 })
-module.exports={PostAward,PostCertificate,PostEducation,PostExperience,PostLanguage,PostPublication,PostSkill,updateAward,updateCertificate,updateEducation,updateExperience,updateLanguage,updatePublication,updateSkill,updateUser,deleteAward,deleteCertificate,deleteEducation,deleteExperience,deleteLanguage,deletePublication,deleteSkill,deleteUser,getUser}
+module.exports={PostAward,PostCertificate,PostEducation,PostExperience,PostLanguage,PostPublication,PostSkill,updateAward,updateCertificate,updateEducation,updateExperience,updateLanguage,updatePublication,updateSkill,updateUser,deleteAward,deleteCertificate,deleteEducation,deleteExperience,deleteLanguage,deletePublication,deleteSkill,deleteUser,getUser,postUser}

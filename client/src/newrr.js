@@ -340,7 +340,7 @@ const navigate=useNavigate()
           <Text>{item.journal}</Text>
           <Text>Vol:{item.volume}, Pages:{item.pages}</Text>
           <Text>{item.year}</Text>
-          <Link to={item.url}>
+          <Link to={item.doi}>
             <Paragraph>{item.doi}</Paragraph>
           </Link>
         </div>

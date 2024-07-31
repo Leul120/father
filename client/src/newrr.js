@@ -25,7 +25,7 @@ const ProfessionalProfile = () => {
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/66a888e5a36eb5f96844fb7e`);
+      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/66aa66a88308517ab913076b`);
       setUser(response.data.user);
     } catch (error) {
       console.log(error);

@@ -39,8 +39,9 @@ const PublicationForm = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_URL}/delete-publication/${decoded.id}/${id}`);
+      const response=await axios.delete(`${process.env.REACT_APP_URL}/delete-publication/${decoded.id}/${id}`);
       message.success('Publication deleted successfully');
+      console.log(response.data)
       fetchPublications();
     } catch (error) {
       message.error('Failed to delete publication');
@@ -64,6 +65,7 @@ const PublicationForm = () => {
     try {
       if (editingPublication) {
         await axios.put(`${process.env.REACT_APP_URL}/update-publication/${decoded.id}/${editingPublication._id}`, result.publications[0]);
+
         message.success('Publication updated successfully');
       } else {
         await axios.post(`${process.env.REACT_APP_URL}/post-publication${decoded.id}`, result);

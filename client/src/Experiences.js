@@ -127,11 +127,7 @@ const ExperienceForm = () => {
         >
           Add Experience
         </Button>
-        <Link to='/memberships'>
-          <Button type="primary" style={{ marginLeft: 16 }}>
-            Add Memberships and Affiliations
-          </Button>
-        </Link>
+        
       </Card>
 
       <Modal

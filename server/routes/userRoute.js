@@ -1,9 +1,10 @@
 const express=require('express')
-const {  PostAward, PostCertificate, PostEducation, PostExperience, PostLanguage, PostPublication, PostSkill, updateUser, updateAward, updateCertificate, updateEducation, updateExperience, updateLanguage, updatePublication, deleteUser, deleteAward, deleteCertificate, deleteEducation, deleteExperience, deleteLanguage, deletePublication, getUser } = require('../controllers/usersController')
+const {  PostAward, PostCertificate, PostEducation, PostExperience, PostLanguage, PostPublication, PostSkill, updateUser, updateAward, updateCertificate, updateEducation, updateExperience, updateLanguage, updatePublication, deleteUser, deleteAward, deleteCertificate, deleteEducation, deleteExperience, deleteLanguage, deletePublication, getUser, postUser } = require('../controllers/usersController')
 const { login, signup } = require('../controllers/authController')
 const router=express.Router()
 
 router.route("/get-user/:userID").get(getUser)
+router.route("/post-user").get(postUser)
 router.route("/post-award/:userID").post(PostAward)
 router.route("/post-certificate/:userID").post(PostCertificate)
 router.route("/post-education/:userID").post(PostEducation)

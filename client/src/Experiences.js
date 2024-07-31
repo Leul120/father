@@ -68,7 +68,7 @@ const ExperienceForm = () => {
   const handleSave = async (values) => {
     setLoading(true);
     const result = { experiences: [{ ...values, startDate: values.startDate.format('YYYY-MM-DD'), endDate: values.endDate ? values.endDate.format('YYYY-MM-DD') : null }] };
-
+console.log(result.experiences[0])
     try {
       if (editingExperience) {
         await axios.put(`${process.env.REACT_APP_URL}/update-experience/${decoded.id}/${editingExperience._id}`, result.experiences[0]);

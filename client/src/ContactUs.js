@@ -38,7 +38,7 @@ const ContactUs = () => {
               rules={{ required: true }}
               render={({ field }) => (
                 <input
-                  className={`w-full border-b-2 bg-transparent border-gray-400  px-3 py-2 text-white focus:outline-none focus:border-purple-400 ${errors.firstName ? 'border-red-500' : ''}`}
+                  className={`w-full border-b-2 bg-transparent border-gray-400  px-3 py-2 focus:outline-none focus:border-purple-400 ${errors.firstName ? 'border-red-500' : ''}`}
                   placeholder='First Name'
                   {...field}
                 />

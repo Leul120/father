@@ -30,7 +30,7 @@ const PublicationForm = () => {
 
   const fetchPublications = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/user/get-user/${decoded.id}`);
+      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${decoded.id}`);
       setPublications(response.data.user.publications);
     } catch (error) {
       message.error('Failed to fetch publications');

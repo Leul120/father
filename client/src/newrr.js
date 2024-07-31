@@ -10,6 +10,7 @@ import gsap from "gsap";
 import VerticalNavbar from "./Navigation";
 import './App.css'
 import { useNavigate } from "react-router-dom";
+import pic from './Dr._Melkamus_Photo_.jpg'
 const { Title, Text, Paragraph } = Typography;
 
 const ProfessionalProfile = () => {
@@ -161,7 +162,7 @@ const navigate=useNavigate()
 
   const HeaderSection = ({ name, title, contact }) => (
     <div className="flex flex-col items-center justify-center text-center space-y-4">
-      <Avatar size={100} icon={<UserOutlined />} />
+      <Avatar size={150}  src={pic} />
       <motion.div
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}

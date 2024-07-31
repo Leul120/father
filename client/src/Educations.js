@@ -34,7 +34,7 @@ const EducationForm = () => {
   const fetchEducation = async () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${decoded.id}`);
-      setEducationList(response.data.user.education.map(edu => ({
+      setEducationList(response.data.user.educations.map(edu => ({
         ...edu,
         graduationDate: moment(edu.graduationDate),
       })));
@@ -65,11 +65,11 @@ const EducationForm = () => {
 
   const handleSave = async (values) => {
     setLoading(true);
-    const result = { education: [{ ...values, graduationDate: values.graduationDate.format('YYYY-MM-DD') }] };
+    const result = { educations: [{ ...values, graduationDate: values.graduationDate.format('YYYY-MM-DD') }] };
 
     try {
       if (editingEducation) {
-        await axios.put(`${process.env.REACT_APP_URL}/update-education/${decoded.id}/${editingEducation._id}`, result.education[0]);
+        await axios.put(`${process.env.REACT_APP_URL}/update-education/${decoded.id}/${editingEducation._id}`, result.educations[0]);
         message.success('Education updated successfully');
       } else {
         await axios.post(`${process.env.REACT_APP_URL}/post-education/${decoded.id}`, result);

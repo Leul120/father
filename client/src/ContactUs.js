@@ -15,8 +15,10 @@ const ContactUs = () => {
   const submitData = async (data) => {
     try {
       setLoading(true);
-      await axios.post(`${process.env.REACT_APP_URL}/contact-us`, data);
+      console.log(data)
+      const response=await axios.post(`${process.env.REACT_APP_URL}/contact-us`, data);
       setLoading(false);
+      console.log(response.data)
       message.success("Message sent successfully!");
       reset(); // Reset form after successful submission
     } catch (err) {

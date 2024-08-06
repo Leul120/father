@@ -12,7 +12,7 @@ let transporter = nodemailer.createTransport({
     service: 'gmail', // Example using Gmail
     auth: {
         user: "tirumelk@gmail.com",
-        pass: "oaol elkh mzfq htnv"
+        pass: "bczx ctwp mygj coxd"
     }
 });
 exports.signup=catchAsync(async (req,res,next)=>{
@@ -61,13 +61,13 @@ exports.login=async (req,res,next)=>{
 exports.contactUs=catchAsync(async (req,res)=>{
   let mailOptions = {
     from: req.body.email,
-    to: "leulmelkamu15@gmail.com", // List of recipients
-    subject: 'Reset Your Password', // Subject line
-    text: 'Greetings from the team.', // Plain text body
+    to: "tirumelk@gmail.com", // List of recipients
+    subject: 'Message from contact us page of the website', // Subject line
+    text: 'Greetings.', // Plain text body
     html: `
-        <p>Email from ${req.body.firstName} ${req.body.lastName}</p>
+        <p>Email from ${req.body.firstName} ${req.body.lastName} with email:${req.body.email}</p>
         you can contact the user with ${req.body.phoneNumber}
-        <p>
+        <p>Description:
           ${req.body.description}
         </p>
         
@@ -77,6 +77,7 @@ exports.contactUs=catchAsync(async (req,res)=>{
     transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
         res.status(400).json({
+            error,
             status:400,
             message:"An Error Occurred"})
         console.log(error)

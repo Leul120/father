@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "tailwindcss/tailwind.css";
-import { Card, List, Typography, Space, Progress, Divider, Avatar, Tag, Button } from "antd";
-import { PhoneOutlined, MailOutlined, GlobalOutlined, UserOutlined } from "@ant-design/icons";
+import { Card, List, Typography, Space, Progress, Divider, Avatar, Tag, Button, Modal } from "antd";
+import { PhoneOutlined, MailOutlined, GlobalOutlined, UserOutlined, LoadingOutlined } from "@ant-design/icons";
 import { motion, useAnimation } from "framer-motion";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -11,12 +11,14 @@ import VerticalNavbar from "./Navigation";
 import './App.css'
 import { useNavigate } from "react-router-dom";
 import pic from './Dr._Melkamus_Photo_.jpg'
+import {Mosaic, Riple} from 'react-loading-indicators'
 const { Title, Text, Paragraph } = Typography;
 
 const ProfessionalProfile = () => {
   const token = window.localStorage.getItem('token');
   const [user, setUser] = useState({});
   const [background, setBackground] = useState("bg1");
+  const [loading,setLoading]=useState(false)
 
   useEffect(() => {
     fetchUser();
@@ -25,10 +27,13 @@ const ProfessionalProfile = () => {
 
   const fetchUser = async () => {
     try {
+      setLoading(true)
       const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/66aa66a88308517ab913076b`);
       setUser(response.data.user);
+      setLoading(false)
     } catch (error) {
       console.log(error);
+      setLoading(false)
     }
   };
   
@@ -259,6 +264,21 @@ const navigate=useNavigate()
     ))}
   </div>
 </Section>
+<Modal
+  visible={loading}
+  className="custom-modal flex justify-center items-center"
+  footer={null}
+  closable={false}
+  width={125}
+  centered
+  maskStyle={{ backgroundColor: "rgba(0, 0, 0, 0.6)"  }}
+  wrapClassName="bg-transparent"
+>
+  <div className="text-3xl bg-transparent">
+    <Mosaic color="#037bfc" size="medium" text="" textColor="" />
+  </div>
+</Modal>
+
           </div>
         </div>
       </motion.div>

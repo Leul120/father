@@ -266,7 +266,7 @@ const navigate=useNavigate()
 </Section>
 <Modal
   visible={loading}
-  className="custom-modal flex justify-center items-center"
+  className="flex justify-center items-center"
   footer={null}
   closable={false}
   width={125}

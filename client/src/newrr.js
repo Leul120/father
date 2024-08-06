@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "tailwindcss/tailwind.css";
-import { Card, List, Typography, Space, Progress, Divider, Avatar, Tag, Button, Modal } from "antd";
+import { Card, List, Typography, Space, Progress, Divider, Avatar, Tag, Button, Modal, Descriptions } from "antd";
 import { PhoneOutlined, MailOutlined, GlobalOutlined, UserOutlined, LoadingOutlined } from "@ant-design/icons";
 import { motion, useAnimation } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -142,7 +142,7 @@ const navigate=useNavigate()
                     <List.Item>
                       <Title level={4}>{item.degree}</Title>
                       <Text>{item.field}</Text>
-                      <Text>{item.institution}, {item.location}</Text>
+                      <Text>{item.institution}, {item.location}</Text><br />
                       <Text>{new Date(item.graduationDate).toLocaleDateString()}</Text>
                       <Paragraph>GPA: {item.gpa}</Paragraph>
                       <Paragraph>Thesis: {item.thesis}</Paragraph>
@@ -182,7 +182,7 @@ const navigate=useNavigate()
                     whileHover={{ scale: 1.1, rotate: 10 }}
                     className="cursor-pointer"
                   >
-                    <Tag color="" className="p-3 text-lg">{skill.skill}</Tag>
+                    <Tag color="" className="p-3 text-lg bg-slate-300 rounded-3xl">{skill.skill}</Tag>
                   </motion.div>
                 ))}
               </Space>
@@ -191,33 +191,32 @@ const navigate=useNavigate()
             
 
             <Section title="Languages" backgroundClass="bg5">
-              <List
+              <div
                 itemLayout="horizontal"
-                dataSource={user?.languages}
-                renderItem={(item) => (
-                  <div className="list-item">
-                    <List.Item>
-                      <Tag color="blue" className="p-3 text-lg">{item.language}</Tag>
-                    </List.Item>
+                className="flex flex-row"
+                >
+                {user?.languages?.map((item) => (
+                  <div className="">
+                    <span>
+                      <Tag color="blue" className="p-3 text-lg rounded-xl">{item.language}
+                      <div className="text-sm text-stone-500">{item.proficiency}</div>
+                      </Tag>
+                    </span>
                   </div>
-                )}
-              />
+                ))}
+              </div>
             </Section>
 
          <Section title="Certificates" backgroundClass="bg6">
-  <div
-    
-    className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2  ">
-    {user?.certificates?.map((item) => (
-      <div className="list-item mb-6 m-2 ">
-        <List.Item>
-          <div className="bg-white shadow-lg rounded-lg p-6 transition-transform transform hover:scale-105">
-            <Title level={4} className="text-xl font-semibold text-gray-800 hover:text-blue-600">{item.title}</Title>
-            <Text className="text-gray-600">{item.institution}</Text>
-            <Text className="text-gray-500 text-sm block">{new Date(item.date).toLocaleDateString()}</Text>
-            <Paragraph className="mt-2 text-gray-700">{item.description}</Paragraph>
-          </div>
-        </List.Item>
+  <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2">
+    {user?.certificates?.map((item, index) => (
+      <div key={index} className="list-item mb-6 m-2" style={{ listStyle: 'none' }}>
+        <div className="bg-white shadow-lg rounded-lg p-6 transition-transform transform hover:scale-105">
+          <Title level={4} className="text-xl font-semibold text-gray-800 hover:text-blue-600">{item.title}</Title>
+          <Text className="text-gray-600">{item.institution}</Text>
+          <Text className="text-gray-500 text-sm block">{new Date(item.date).toLocaleDateString()}</Text>
+          <Paragraph className="mt-2 text-gray-700">{item.description}</Paragraph>
+        </div>
       </div>
     ))}
   </div>

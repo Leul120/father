@@ -145,7 +145,7 @@ const navigate=useNavigate()
                       <Text>{item.institution}, {item.location}</Text><br />
                       <Text>{new Date(item.graduationDate).toLocaleDateString()}</Text>
                       <Paragraph>GPA: {item.gpa}</Paragraph>
-                      <Paragraph>Thesis: {item.thesis}</Paragraph>
+                      <Paragraph> {item.thesis}</Paragraph>
                     </List.Item>
                   </div>
                 )}

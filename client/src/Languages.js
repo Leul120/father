@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Form, Input, Button, Card, List, message, Modal, Select } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import {jwtDecode} from 'jwt-decode';
+import { AppContext } from './App';
 
 const LanguageForm = () => {
   const [languages, setLanguages] = useState([]);
   const [editingLanguage, setEditingLanguage] = useState(null);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const {user}=useContext(AppContext)
   const token = window.localStorage.getItem('token');
   const decoded = jwtDecode(token);
   const [form] = Form.useForm();
@@ -30,7 +31,7 @@ const LanguageForm = () => {
 
   const fetchLanguages = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${decoded.id}`);
+      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${user._id}`);
       setLanguages(response.data.user.languages);
     } catch (error) {
       message.error('Failed to fetch languages');
@@ -39,7 +40,7 @@ const LanguageForm = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_URL}/delete-language/${decoded.id}/${id}`);
+      await axios.delete(`${process.env.REACT_APP_URL}/delete-language/${user._id}/${id}`);
       message.success('Language deleted successfully');
       fetchLanguages();
     } catch (error) {
@@ -63,10 +64,10 @@ const LanguageForm = () => {
 
     try {
       if (editingLanguage) {
-        await axios.put(`${process.env.REACT_APP_URL}/update-language/${decoded.id}/${editingLanguage._id}`, result.languages[0]);
+        await axios.put(`${process.env.REACT_APP_URL}/update-language/${user._id}/${editingLanguage._id}`, result.languages[0]);
         message.success('Language updated successfully');
       } else {
-        await axios.post(`${process.env.REACT_APP_URL}/post-language/${decoded.id}`, result);
+        await axios.post(`${process.env.REACT_APP_URL}/post-language/${user._id}`, result);
         message.success('Language added successfully');
       }
       fetchLanguages();

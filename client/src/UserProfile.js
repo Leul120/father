@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Form, Input, Button, Card, message } from 'antd';
 import axios from 'axios';
 import {jwtDecode} from 'jwt-decode';
+import { AppContext } from './App';
 
 const UserProfileForm = () => {
   const [userProfile, setUserProfile] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const token = window.localStorage.getItem('token');
-  const decoded = jwtDecode(token);
+  const {user}=useContext(AppContext)
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const UserProfileForm = () => {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${decoded.id}`);
+      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${user._id}`);
       setUserProfile(response.data.user);
     } catch (error) {
       message.error('Failed to fetch user profile');
@@ -31,7 +31,7 @@ const UserProfileForm = () => {
   const handleSave = async (values) => {
     setLoading(true);
     try {
-      await axios.put(`${process.env.REACT_APP_URL}/update-user/${decoded.id}`, values);
+      await axios.put(`${process.env.REACT_APP_URL}/update-user/${user._id}`, values);
       message.success('Profile updated successfully');
       fetchUserProfile();
     } catch (error) {

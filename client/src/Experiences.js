@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Form, Input, Button, Card, List, message, Modal, DatePicker } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import axios from 'axios';
 import {jwtDecode} from 'jwt-decode';
 import { Link } from 'react-router-dom';
+import { AppContext } from './App';
 
 const ExperienceForm = () => {
   const [experiences, setExperiences] = useState([]);
   const [editingExperience, setEditingExperience] = useState(null);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const token = window.localStorage.getItem('token');
-  const decoded = jwtDecode(token);
+  const {user}=useContext(AppContext)
+  
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const ExperienceForm = () => {
 
   const fetchExperiences = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${decoded.id}`);
+      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${user._id}`);
       setExperiences(response.data.user.experiences.map(exp => ({
         ...exp,
         startDate: moment(exp.startDate),
@@ -47,7 +47,7 @@ const ExperienceForm = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_URL}/delete-experience/${decoded.id}/${id}`);
+      await axios.delete(`${process.env.REACT_APP_URL}/delete-experience/${user._id}/${id}`);
       message.success('Experience deleted successfully');
       fetchExperiences();
     } catch (error) {
@@ -71,10 +71,10 @@ const ExperienceForm = () => {
 console.log(result.experiences[0])
     try {
       if (editingExperience) {
-        await axios.put(`${process.env.REACT_APP_URL}/update-experience/${decoded.id}/${editingExperience._id}`, result.experiences[0]);
+        await axios.put(`${process.env.REACT_APP_URL}/update-experience/${user._id}/${editingExperience._id}`, result.experiences[0]);
         message.success('Experience updated successfully');
       } else {
-        await axios.post(`${process.env.REACT_APP_URL}/post-experience/${decoded.id}`, result);
+        await axios.post(`${process.env.REACT_APP_URL}/post-experience/${user._id}`, result);
         message.success('Experience added successfully');
       }
       fetchExperiences();

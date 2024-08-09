@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Form, Input, Button, Card, List, message, Modal, Select } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import {jwtDecode} from 'jwt-decode';
+import { AppContext } from './App';
 
 const SkillForm = () => {
   const [skills, setSkills] = useState([]);
   const [editingSkill, setEditingSkill] = useState(null);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const token = window.localStorage.getItem('token');
-  const decoded = jwtDecode(token);
+  const {user}=useContext(AppContext)
+  
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const SkillForm = () => {
 
   const fetchSkills = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${decoded.id}`);
+      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${user._id}`);
       setSkills(response.data.user.skills);
     } catch (error) {
       message.error('Failed to fetch skills');
@@ -39,7 +39,7 @@ const SkillForm = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_URL}/delete-skill/${decoded.id}/${id}`);
+      await axios.delete(`${process.env.REACT_APP_URL}/delete-skill/${user._id}/${id}`);
       message.success('Skill deleted successfully');
       fetchSkills();
     } catch (error) {
@@ -63,10 +63,10 @@ const SkillForm = () => {
 
     try {
       if (editingSkill) {
-        await axios.put(`${process.env.REACT_APP_URL}/update-skill/${decoded.id}/${editingSkill._id}`, result.skills[0]);
+        await axios.put(`${process.env.REACT_APP_URL}/update-skill/${user._id}/${editingSkill._id}`, result.skills[0]);
         message.success('Skill updated successfully');
       } else {
-        await axios.post(`${process.env.REACT_APP_URL}/post-skill${decoded.id}`, result);
+        await axios.post(`${process.env.REACT_APP_URL}/post-skill${user._id}`, result);
         message.success('Skill added successfully');
       }
       fetchSkills();

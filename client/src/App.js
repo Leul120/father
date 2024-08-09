@@ -13,10 +13,13 @@ import Login from './Login';
 import UserProfileForm from './UserProfile';
 import ContactUs from './ContactUs';
 import LanguageForm from './Languages';
-
+import { createContext, useState } from 'react';
+export const  AppContext=createContext()
 function App() {
+  const [user,setUser]=useState({})
   return (
     <div className="App">
+    <AppContext.Provider value={{user,setUser}}>
       <Router>
         <Routes>
           <Route path='/' element={<ProfessionalProfile/>}/>
@@ -33,6 +36,7 @@ function App() {
           <Route path="/contact-us" element={<ContactUs/>}/>
         </Routes>
       </Router>
+      </AppContext.Provider>
     </div>
   );
 }

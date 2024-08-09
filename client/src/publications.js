@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Form, Input, Button, Card, List, message, Modal } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import {jwtDecode} from 'jwt-decode';
+import { AppContext } from './App';
 
 const PublicationForm = () => {
   const [publications, setPublications] = useState([]);
   const [editingPublication, setEditingPublication] = useState(null);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+const {user}=useContext(AppContext)
 
-  const token = window.localStorage.getItem('token');
-  const decoded = jwtDecode(token);
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const PublicationForm = () => {
 
   const fetchPublications = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${decoded.id}`);
+      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${user._id}`);
       setPublications(response.data.user.publications);
     } catch (error) {
       message.error('Failed to fetch publications');
@@ -39,7 +39,7 @@ const PublicationForm = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response=await axios.delete(`${process.env.REACT_APP_URL}/delete-publication/${decoded.id}/${id}`);
+      const response=await axios.delete(`${process.env.REACT_APP_URL}/delete-publication/${user._id}/${id}`);
       message.success('Publication deleted successfully');
       console.log(response.data)
       fetchPublications();
@@ -64,11 +64,11 @@ const PublicationForm = () => {
 
     try {
       if (editingPublication) {
-        await axios.put(`${process.env.REACT_APP_URL}/update-publication/${decoded.id}/${editingPublication._id}`, result.publications[0]);
+        await axios.put(`${process.env.REACT_APP_URL}/update-publication/${user._id}/${editingPublication._id}`, result.publications[0]);
 
         message.success('Publication updated successfully');
       } else {
-        await axios.post(`${process.env.REACT_APP_URL}/post-publication${decoded.id}`, result);
+        await axios.post(`${process.env.REACT_APP_URL}/post-publication${user._id}`, result);
         message.success('Publication added successfully');
       }
       fetchPublications();

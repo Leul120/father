@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Form, Input, Button, Card, List, message, Modal } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import axios from 'axios';
 import {jwtDecode} from 'jwt-decode';
 import { Link } from 'react-router-dom';
+import { AppContext } from './App';
 
 const AwardsForm = () => {
   const [awards, setAwards] = useState([]);
   const [editingAward, setEditingAward] = useState(null);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false)
-
-  const token = window.localStorage.getItem('token');
-  const decoded = jwtDecode(token);
+  const {user}=useContext(AppContext)
+  
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const AwardsForm = () => {
 
   const fetchAwards = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${decoded.id}`);
+      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${user._id}`);
       setAwards(response.data.user.awards);
     } catch (error) {
       message.error('Failed to fetch awards');
@@ -39,7 +39,7 @@ const AwardsForm = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_URL}/delete-award/${decoded.id}/${id}`);
+      await axios.delete(`${process.env.REACT_APP_URL}/delete-award/${user._id}/${id}`);
       message.success('Award deleted successfully');
       fetchAwards();
     } catch (error) {
@@ -62,10 +62,10 @@ const AwardsForm = () => {
 
     try {
       if (editingAward) {
-        await axios.put(`${process.env.REACT_APP_URL}/update-award/${decoded.id}/${editingAward._id}`, values);
+        await axios.put(`${process.env.REACT_APP_URL}/update-award/${user._id}/${editingAward._id}`, values);
         message.success('Award updated successfully');
       } else {
-        await axios.post(`${process.env.REACT_APP_URL}/post-award/${decoded.id}`, { awards: [values] });
+        await axios.post(`${process.env.REACT_APP_URL}/post-award/${user._id}`, { awards: [values] });
         message.success('Award added successfully');
       }
       fetchAwards();

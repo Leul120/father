@@ -32,8 +32,8 @@ const EducationForm = () => {
 
   const fetchEducation = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${user._id}`);
-      setEducationList(response.data.user.educations.map(edu => ({
+      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${user?._id}`);
+      setEducationList(response.data.user?.educations.map(edu => ({
         ...edu,
         graduationDate: moment(edu.graduationDate),
       })));
@@ -44,7 +44,7 @@ const EducationForm = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_URL}/delete-education/${user._id}/${id}`);
+      await axios.delete(`${process.env.REACT_APP_URL}/delete-education/${user?._id}/${id}`);
       message.success('Education deleted successfully');
       fetchEducation();
     } catch (error) {
@@ -68,10 +68,10 @@ const EducationForm = () => {
 
     try {
       if (editingEducation) {
-        await axios.put(`${process.env.REACT_APP_URL}/update-education/${user._id}/${editingEducation._id}`, result.educations[0]);
+        await axios.put(`${process.env.REACT_APP_URL}/update-education/${user?._id}/${editingEducation._id}`, result.educations[0]);
         message.success('Education updated successfully');
       } else {
-        await axios.post(`${process.env.REACT_APP_URL}/post-education/${user._id}`, result);
+        await axios.post(`${process.env.REACT_APP_URL}/post-education/${user?._id}`, result);
         message.success('Education added successfully');
       }
       fetchEducation();

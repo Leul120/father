@@ -15,6 +15,7 @@ const Login = () => {
         const response=await axios.post(`${process.env.REACT_APP_URL}/login`,values)
         console.log(response.data)
         window.localStorage.setItem('token',response.data.token)
+        window.localStorage.setItem('user',JSON.stringify(response.data.user))
     // Simulate a network request
     setTimeout(() => {
       setLoading(false);

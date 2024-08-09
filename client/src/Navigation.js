@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Menu } from 'antd';
 import {
   UserOutlined,
@@ -11,9 +11,14 @@ import {
   ReadOutlined
 } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import { AppContext } from './App';
 
 const VerticalNavbar = () => {
-  return (
+  const {setUser,user}=useContext(AppContext)
+  useEffect(()=>{
+    setUser(JSON.parse(window.localStorage.getItem('user')))
+  },[setUser,user])
+    return (
     <div className=" rounded-xl bg-gray-100 text-white p-4">
       <Menu
         mode="inline"

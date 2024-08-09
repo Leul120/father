@@ -1,19 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Form, Input, Button, Card, List, message, Modal, DatePicker, InputNumber } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import axios from 'axios';
 import {jwtDecode} from 'jwt-decode';
 import { Link } from 'react-router-dom';
+import { AppContext } from './App';
 
 const EducationForm = () => {
   const [educationList, setEducationList] = useState([]);
   const [editingEducation, setEditingEducation] = useState(null);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const token = window.localStorage.getItem('token');
-  const decoded = jwtDecode(token);
+  const {user}=useContext(AppContext)
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -33,7 +32,7 @@ const EducationForm = () => {
 
   const fetchEducation = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${decoded.id}`);
+      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${user._id}`);
       setEducationList(response.data.user.educations.map(edu => ({
         ...edu,
         graduationDate: moment(edu.graduationDate),
@@ -45,7 +44,7 @@ const EducationForm = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_URL}/delete-education/${decoded.id}/${id}`);
+      await axios.delete(`${process.env.REACT_APP_URL}/delete-education/${user._id}/${id}`);
       message.success('Education deleted successfully');
       fetchEducation();
     } catch (error) {
@@ -69,10 +68,10 @@ const EducationForm = () => {
 
     try {
       if (editingEducation) {
-        await axios.put(`${process.env.REACT_APP_URL}/update-education/${decoded.id}/${editingEducation._id}`, result.educations[0]);
+        await axios.put(`${process.env.REACT_APP_URL}/update-education/${user._id}/${editingEducation._id}`, result.educations[0]);
         message.success('Education updated successfully');
       } else {
-        await axios.post(`${process.env.REACT_APP_URL}/post-education/${decoded.id}`, result);
+        await axios.post(`${process.env.REACT_APP_URL}/post-education/${user._id}`, result);
         message.success('Education added successfully');
       }
       fetchEducation();

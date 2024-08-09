@@ -3,7 +3,9 @@ const jwt=require('jsonwebtoken')
 const catchAsync=require('../utils/catchAsync')
 const bcrypt=require('bcrypt')
 
+
 const nodemailer = require('nodemailer');
+const AppError = require('../utils/appError');
 
 const signToken=(id)=>{
     return jwt.sign({id:id},process.env.JWT_SECRET)

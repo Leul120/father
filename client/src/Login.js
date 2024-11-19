@@ -31,8 +31,9 @@ const Login = () => {
         message: "Login Successful",
         description: "You have logged in successfully!",
       });
+      window.location.reload()
     }, 2000);
-    window.location.reload()
+    
     
 }catch(error){
   setLoading(false)

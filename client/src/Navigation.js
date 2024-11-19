@@ -29,6 +29,7 @@ const MenuItem = ({ icon, to, children }) => {
 const HorizontalNavbar = () => {
   const { setUser, user } = useContext(AppContext);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const {token}=useContext(AppContext)
 
   useEffect(() => {
     setUser(JSON.parse(window.localStorage.getItem('user')));
@@ -54,6 +55,7 @@ const HorizontalNavbar = () => {
       <Menu.Item key="1">
         <div onClick={()=>{
           window.localStorage.removeItem("token")
+          window.location.reload()
         }}>Logout</div>
       </Menu.Item>
     </Menu>

@@ -293,7 +293,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-
 import { 
   FaUserGraduate, 
   FaBriefcase, 
@@ -324,7 +323,7 @@ import { CiLogin } from "react-icons/ci";
 import { Upload } from 'antd';
 
 const ProfessionalProfile = () => {
-  // const [activeSection, setActiveSection] = useState('summary');
+  const [activeSection, setActiveSection] = useState('summary');
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
   
@@ -332,7 +331,7 @@ const ProfessionalProfile = () => {
     const loadData = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`/api/get-all`);
+        const response = await fetch(`${process.env.REACT_APP_URL}/get-all`);
         const data = await response.json();
         console.log(data.user)
         setUser(data.user);
@@ -714,7 +713,7 @@ const AwardCard = ({ award, index }) => {
 };
 
 const PublicationCard = ({ publication, index }) => {
-  // const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [ref, inView] = useInView({
     threshold: 0.1,
     triggerOnce: true

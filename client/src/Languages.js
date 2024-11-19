@@ -29,7 +29,7 @@ const LanguageForm = () => {
 
   const fetchLanguages = async () => {
     try {
-      const response = await axios.get(`api/get-user`,{headers:{
+      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user`,{headers:{
         Authorization:`Bearer ${token}`
       }});
       setLanguages(response.data.user.languages);
@@ -40,7 +40,7 @@ const LanguageForm = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`api/delete-language/${id}`,{headers:{
+      await axios.delete(`${process.env.REACT_APP_URL}/delete-language/${id}`,{headers:{
         Authorization:`Bearer ${token}`
       }});
       message.success('Language deleted successfully');
@@ -66,12 +66,12 @@ const LanguageForm = () => {
 
     try {
       if (editingLanguage) {
-        await axios.put(`api/update-language/${editingLanguage._id}`, result.languages[0],{headers:{
+        await axios.put(`${process.env.REACT_APP_URL}/update-language/${editingLanguage._id}`, result.languages[0],{headers:{
         Authorization:`Bearer ${token}`
       }});
         message.success('Language updated successfully');
       } else {
-        await axios.post(`api/post-language`, result,{headers:{
+        await axios.post(`${process.env.REACT_APP_URL}/post-language`, result,{headers:{
         Authorization:`Bearer ${token}`
       }});
         message.success('Language added successfully');

@@ -15,7 +15,7 @@ const getUser = catchAsync(async (req, res) => {
     res.status(200).json({ user });
 })
 const getAll = catchAsync(async (req, res) => {
-    const userID = "66aa66a88308517ab913076b"
+    const userID = "673cda6e39521f39cfa04e24"
     const user = await Users.findOne({ _id: userID });
     
     res.status(200).json({ user });
@@ -148,6 +148,7 @@ const updateExperience=catchAsync(async (req,res)=>{
             }
         })
         
+        
         res.status(200).json({experience})
 })
 const deleteExperience=catchAsync(async (req,res)=>{
@@ -226,16 +227,17 @@ const PostSkill= catchAsync(async (req,res)=>{
 })
 const updateSkill=catchAsync(async (req,res)=>{
     
-        const userID=req.user._id
-        const skillID=req.params.skillID
-        const skill=await Users.findOneAndUpdate({_id:userID,'skills._id':skillID},{
-            $set:{
-                'skills.$.skill': req.body.skill,
-                'skills.$.level': req.body.level
-            }
-        })
-        
-        res.status(200).json({skill})
+         const userID=req.user._id
+         const skillID=req.params.skillID
+         const skill=await Users.findOneAndUpdate({_id:userID,'skills._id':skillID},{
+             $set:{
+                 'skills.$.skill': req.body.skill,
+                 'skills.$.level': req.body.level
+             }
+         })
+         
+         res.status(200).json({skill})
+       
 })
 const deleteSkill=catchAsync(async (req,res)=>{
         const userID=req.user._id

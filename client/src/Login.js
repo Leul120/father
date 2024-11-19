@@ -3,12 +3,13 @@ import "tailwindcss/tailwind.css";
 import { Button, Input, Form, Typography, notification } from "antd";
 import { motion } from "framer-motion";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
-
+  const navigate=useNavigate()
   const handleLogin =async (values) => {
     setLoading(true);
     try{
@@ -24,7 +25,9 @@ const Login = () => {
         description: "You have logged in successfully!",
       });
     }, 2000);
+    navigate("/")
 }catch(error){
+  setLoading(false)
     console.log(error)
 }
   };

@@ -2,7 +2,8 @@ const Users=require('../models/userModel')
 const jwt=require('jsonwebtoken')
 const catchAsync=require('../utils/catchAsync')
 const bcrypt=require('bcrypt')
-
+// const AppError=require('../utils/appError')
+const {promisify}=require("util")
 
 const nodemailer = require('nodemailer');
 const AppError = require('../utils/appError');
@@ -32,7 +33,7 @@ exports.signup=catchAsync(async (req,res,next)=>{
             data:{user:newUser}
         })
     }else{
-        next(AppError("couldn't create a user",500))
+        next(new AppError("couldn't create a user",500))
     }
 })
 exports.login=async (req,res,next)=>{
@@ -43,7 +44,7 @@ exports.login=async (req,res,next)=>{
 
     if(!user || !await user.correctPassword(password,user.password)){
         
-       next(AppError("incorrect email or password",401))
+       res.status(400).json("incorrect email or password")
     }else{
         const token=signToken(user._id)
 
@@ -89,4 +90,53 @@ exports.contactUs=catchAsync(async (req,res)=>{
         message:"Email sent successfully, Please check your email to verify and please check the spams folder in your email if you don't find it in your inbox"})
     });
 })   
+
+exports.protect=async(req,res,next)=>{
+    try{
+        
+      
+    let token;
+    if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
+        token=req.headers.authorization.split(' ')[1]
+        console.log(token)
+    }
+
+    if(!token){
+       
+        return res.status(401).json({ message: 'You are not logged in! Please log in to get access' });
+    }
+    const decoded=await promisify(jwt.verify)(token,process.env.JWT_SECRET)
+    const currentUser=await Users.findById(decoded.id)
+    if(!currentUser){
+        // return next(new AppError('The user belonging to this token does no longer exist.',401))
+        return res.status(401).json({ message: 'User does not exist!' });
+
+    }
+    req.user=currentUser
+    next()
+}catch(error){
+    res.status(400).json(error.message)
+}
+}
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({ message: 'You do not have permission to perform this action' });
+    }
+    next(); // Proceed if role is allowed
+  };
+};
+// const forgetPassword=async ()=>{
+//     const email="tirumelk@gmail.com"
+//     try{
+//     const user=await Users.findOne({email:email})
+
+//     user.password="melkamu@123"
+//     await user.save()
+//     console.log("changed")
+//     }catch(error){
+//         console.log(error)
+//     }
+// }
+// forgetPassword();
    

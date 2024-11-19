@@ -67,7 +67,7 @@ const HorizontalNavbar = () => {
           
 
           {/* Main Navigation */}
-          <nav className="hidden md:flex flex-1 justify-center overflow-x-auto">
+          <nav className="hidden xl:flex flex-1 justify-center overflow-x-auto">
             <div className="flex space-x-2">
               {menuItems.map((item) => (
                 <MenuItem key={item.to} icon={item.icon} to={item.to}>

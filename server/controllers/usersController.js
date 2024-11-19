@@ -5,6 +5,7 @@ const Users=require('../models/userModel')
 
 const postUser=catchAsync(async(req,res)=>{
     const user=await Users.create(req.body)
+    console.log("hello")
     res.status(200).json({user})
 })
 const getUser = catchAsync(async (req, res) => {

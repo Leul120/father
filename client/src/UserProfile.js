@@ -21,7 +21,7 @@ const UserProfileForm = () => {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user`,{headers:{
+      const response = await axios.get(`api/get-user`,{headers:{
         Authorization:`Bearer ${token}`
       }});
       setUserProfile(response.data.user);
@@ -34,7 +34,7 @@ const UserProfileForm = () => {
   const handleSave = async (values) => {
     setLoading(true);
     try {
-      await axios.put(`${process.env.REACT_APP_URL}/update-user`, values,{headers:{
+      await axios.put(`api/update-user`, values,{headers:{
         Authorization:`Bearer ${token}`
       }});
       message.success('Profile updated successfully');

@@ -290,7 +290,7 @@
 
 
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { 
@@ -321,11 +321,14 @@ import {
 } from 'react-icons/si';
 import { CiLogin } from "react-icons/ci";
 import { Upload } from 'antd';
+import { AppContext } from './App';
 
 const ProfessionalProfile = () => {
   const [activeSection, setActiveSection] = useState('summary');
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const {token}=useContext(AppContext)
+  console.log(token)
   
   useEffect(() => {
     const loadData = async () => {
@@ -426,6 +429,7 @@ const ProfessionalProfile = () => {
   />
 
   {/* Update Icon (Visible on Hover) */}
+  {token &&
   <motion.div
     className="absolute bottom-3 left-24  transform -translate-x-1/2 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100  text-white rounded-full p-2 shadow-md cursor-pointer transition-all duration-300"
     whileHover={{ scale: 1.2 }}
@@ -433,7 +437,7 @@ const ProfessionalProfile = () => {
   >
     <Upload className='text-white'><FaRegEdit /></Upload>
 
-  </motion.div>
+  </motion.div>}
 </div>
 
 

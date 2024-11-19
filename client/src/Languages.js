@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Form, Input, Button, Card, List, message, Modal, Select } from 'antd';
+import { Form, Input, Button, Card, List, message, Modal, Select, Skeleton } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { AppContext } from './App';
@@ -9,8 +9,8 @@ const LanguageForm = () => {
   const [editingLanguage, setEditingLanguage] = useState(null);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const {token}=useContext(AppContext)
-  
+  const [fetching, setFetching] = useState(true); // New state for skeleton loading
+  const { token } = useContext(AppContext);
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -29,20 +29,27 @@ const LanguageForm = () => {
 
   const fetchLanguages = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user`,{headers:{
-        Authorization:`Bearer ${token}`
-      }});
+      setFetching(true); // Show skeleton
+      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setLanguages(response.data.user.languages);
     } catch (error) {
       message.error('Failed to fetch languages');
+    } finally {
+      setFetching(false); // Hide skeleton
     }
   };
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_URL}/delete-language/${id}`,{headers:{
-        Authorization:`Bearer ${token}`
-      }});
+      await axios.delete(`${process.env.REACT_APP_URL}/delete-language/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       message.success('Language deleted successfully');
       fetchLanguages();
     } catch (error) {
@@ -66,14 +73,22 @@ const LanguageForm = () => {
 
     try {
       if (editingLanguage) {
-        await axios.put(`${process.env.REACT_APP_URL}/update-language/${editingLanguage._id}`, result.languages[0],{headers:{
-        Authorization:`Bearer ${token}`
-      }});
+        await axios.put(
+          `${process.env.REACT_APP_URL}/update-language/${editingLanguage._id}`,
+          result.languages[0],
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         message.success('Language updated successfully');
       } else {
-        await axios.post(`${process.env.REACT_APP_URL}/post-language`, result,{headers:{
-        Authorization:`Bearer ${token}`
-      }});
+        await axios.post(`${process.env.REACT_APP_URL}/post-language`, result, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         message.success('Language added successfully');
       }
       fetchLanguages();
@@ -87,33 +102,37 @@ const LanguageForm = () => {
   };
 
   return (
-    <div className='px-3 pt-3 h-full bg-stone-50 min-h-screen'>
+    <div className="px-3 pt-3 h-full bg-stone-50 min-h-screen">
       <Card bordered={false} title="Languages">
-        <List
-          itemLayout="horizontal"
-          dataSource={languages}
-          renderItem={(lang) => (
-            <List.Item
-              actions={[
-                <Button
-                  type="link"
-                  icon={<EditOutlined />}
-                  onClick={() => handleEdit(lang)}
-                />,
-                <Button
-                  type="link"
-                  icon={<DeleteOutlined />}
-                  onClick={() => handleDelete(lang._id)}
-                />,
-              ]}
-            >
-              <List.Item.Meta
-                title={`${lang.language}`}
-                description={`Proficiency: ${lang.proficiency}`}
-              />
-            </List.Item>
-          )}
-        />
+        {fetching ? (
+          <Skeleton active paragraph={{ rows: 4 }} /> // Skeleton loading
+        ) : (
+          <List
+            itemLayout="horizontal"
+            dataSource={languages}
+            renderItem={(lang) => (
+              <List.Item
+                actions={[
+                  <Button
+                    type="link"
+                    icon={<EditOutlined />}
+                    onClick={() => handleEdit(lang)}
+                  />,
+                  <Button
+                    type="link"
+                    icon={<DeleteOutlined />}
+                    onClick={() => handleDelete(lang._id)}
+                  />,
+                ]}
+              >
+                <List.Item.Meta
+                  title={`${lang.language}`}
+                  description={`Proficiency: ${lang.proficiency}`}
+                />
+              </List.Item>
+            )}
+          />
+        )}
         <Button
           type="dashed"
           icon={<PlusOutlined />}

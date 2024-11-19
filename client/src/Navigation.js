@@ -90,7 +90,7 @@ const HorizontalNavbar = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center">
+          <div className="xl:hidden flex items-center">
             <button
               className="p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-blue-50 focus:outline-none"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

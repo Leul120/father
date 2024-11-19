@@ -15,7 +15,7 @@ const getUser = catchAsync(async (req, res) => {
     res.status(200).json({ user });
 })
 const getAll = catchAsync(async (req, res) => {
-    const userID = "673cda6e39521f39cfa04e24"
+    const userID = "673ced09d8cbcde5e11b23a5"
     const user = await Users.findOne({ _id: userID });
     
     res.status(200).json({ user });
@@ -57,20 +57,24 @@ const updateAward=catchAsync(async (req,res)=>{
         
         res.status(200).json({award})
 })
-const deleteAward=catchAsync(async (req,res)=>{
-    const userID=req.user._id
-        const awardID=req.params.awardID;
-        await Users.findOneAndUpdate({_id:userID},{$pull:{awards:{_id:awardID}}})
-        res.status(200).json(`deleted successfully`)
-})
-const PostCertificate= catchAsync(async (req,res)=>{
-    const userID=req.user._id
-    const certificate=await Users.findOneAndUpdate({_id:userID},{
-        $push:req.body
-    })
-   
-    res.status(200).json({ok:true})
-})
+const updateSkill = catchAsync(async (req, res) => {
+  const userID = req.user._id
+  const skillID = req.params.skillID;
+  console.log("s",skillID)
+  console.log(userID)
+  const skill = await Users.findOneAndUpdate(
+    { _id: userID, 'skills._id': skillID },
+    {
+      $set: {
+        'skills.$.skill': req.body.skill,
+        'skills.$.level': req.body.level
+      }
+    },
+    { new: true } // returns the updated document
+  );
+    console.log(skill)
+  res.status(200).json({ skill });
+});
 const updateCertificate=catchAsync(async (req,res)=>{
     
         const userID=req.user._id
@@ -85,20 +89,6 @@ const updateCertificate=catchAsync(async (req,res)=>{
         })
         
         res.status(200).json({certificate})
-})
-const deleteCertificate=catchAsync(async (req,res)=>{
-        const userID=req.user._id
-        const certificateID=req.params.certificateID;
-        await Users.findOneAndUpdate({_id:userID},{$pull:{certificates:{_id:certificateID}}})
-        res.status(200).json(`deleted successfully`)
-})
-const PostEducation= catchAsync(async (req,res)=>{
-    const userID=req.user._id
-    const education=await Users.findOneAndUpdate({_id:userID},{
-        $push:req.body
-    })
-   
-    res.status(200).json({ok:true})
 })
 const updateEducation=catchAsync(async (req,res)=>{
     
@@ -117,20 +107,6 @@ const updateEducation=catchAsync(async (req,res)=>{
         })
         
         res.status(200).json({education})
-})
-const deleteEducation=catchAsync(async (req,res)=>{
-        const userID=req.user._id
-        const educationID=req.params.educationID;
-        await Users.findOneAndUpdate({_id:userID},{$pull:{educations:{_id:educationID}}})
-        res.status(200).json(`deleted successfully`)
-})
-const PostExperience= catchAsync(async (req,res)=>{
-    const userID=req.user._id
-    const experience=await Users.findOneAndUpdate({_id:userID},{
-        $push:req.body
-    })
-   
-    res.status(200).json({ok:true})
 })
 const updateExperience=catchAsync(async (req,res)=>{
     
@@ -151,20 +127,6 @@ const updateExperience=catchAsync(async (req,res)=>{
         
         res.status(200).json({experience})
 })
-const deleteExperience=catchAsync(async (req,res)=>{
-        const userID=req.user._id
-        const experienceID=req.params.experienceID;
-        await Users.findOneAndUpdate({_id:userID},{$pull:{experiences:{_id:experienceID}}})
-        res.status(200).json(`deleted successfully`)
-})
-const PostLanguage= catchAsync(async (req,res)=>{
-    const userID=req.user._id
-    const language=await Users.findOneAndUpdate({_id:userID},{
-        $push:req.body
-    })
-   
-    res.status(200).json({ok:true})
-})
 const updateLanguage=catchAsync(async (req,res)=>{
     
         const userID=req.user._id
@@ -178,20 +140,6 @@ const updateLanguage=catchAsync(async (req,res)=>{
         })
         
         res.status(200).json({language})
-})
-const deleteLanguage=catchAsync(async (req,res)=>{
-        const userID=req.user._id
-        const languageID=req.params.languageID;
-        await Users.findOneAndUpdate({_id:userID},{$pull:{languages:{_id:languageID}}})
-        res.status(200).json(`deleted successfully`)
-})
-const PostPublication= catchAsync(async (req,res)=>{
-    const userID=req.user._id
-    const publication=await Users.findOneAndUpdate({_id:userID},{
-        $push:req.body
-    })
-   
-    res.status(200).json({ok:true})
 })
 const updatePublication=catchAsync(async (req,res)=>{
     
@@ -211,6 +159,81 @@ const updatePublication=catchAsync(async (req,res)=>{
         
         res.status(200).json({publication})
 })
+const deleteAward=catchAsync(async (req,res)=>{
+    const userID=req.user._id
+        const awardID=req.params.awardID;
+        await Users.findOneAndUpdate({_id:userID},{$pull:{awards:{_id:awardID}}})
+        res.status(200).json(`deleted successfully`)
+})
+const PostCertificate= catchAsync(async (req,res)=>{
+    const userID=req.user._id
+    const certificate=await Users.findOneAndUpdate({_id:userID},{
+        $push:req.body
+    })
+   
+    res.status(200).json({ok:true})
+})
+
+const deleteCertificate=catchAsync(async (req,res)=>{
+        const userID=req.user._id
+        const certificateID=req.params.certificateID;
+        await Users.findOneAndUpdate({_id:userID},{$pull:{certificates:{_id:certificateID}}})
+        res.status(200).json(`deleted successfully`)
+})
+const PostEducation= catchAsync(async (req,res)=>{
+    const userID=req.user._id
+    const education=await Users.findOneAndUpdate({_id:userID},{
+        $push:req.body
+    })
+   
+    res.status(200).json({ok:true})
+})
+
+const deleteEducation=catchAsync(async (req,res)=>{
+        const userID=req.user._id
+        const educationID=req.params.educationID;
+        await Users.findOneAndUpdate({_id:userID},{$pull:{educations:{_id:educationID}}})
+        res.status(200).json(`deleted successfully`)
+})
+const PostExperience= catchAsync(async (req,res)=>{
+    const userID=req.user._id
+    const experience=await Users.findOneAndUpdate({_id:userID},{
+        $push:req.body
+    })
+   
+    res.status(200).json({ok:true})
+})
+
+const deleteExperience=catchAsync(async (req,res)=>{
+        const userID=req.user._id
+        const experienceID=req.params.experienceID;
+        await Users.findOneAndUpdate({_id:userID},{$pull:{experiences:{_id:experienceID}}})
+        res.status(200).json(`deleted successfully`)
+})
+const PostLanguage= catchAsync(async (req,res)=>{
+    const userID=req.user._id
+    const language=await Users.findOneAndUpdate({_id:userID},{
+        $push:req.body
+    })
+   
+    res.status(200).json({ok:true})
+})
+
+const deleteLanguage=catchAsync(async (req,res)=>{
+        const userID=req.user._id
+        const languageID=req.params.languageID;
+        await Users.findOneAndUpdate({_id:userID},{$pull:{languages:{_id:languageID}}})
+        res.status(200).json(`deleted successfully`)
+})
+const PostPublication= catchAsync(async (req,res)=>{
+    const userID=req.user._id
+    const publication=await Users.findOneAndUpdate({_id:userID},{
+        $push:req.body
+    })
+   
+    res.status(200).json({ok:true})
+})
+
 const deletePublication=catchAsync(async (req,res)=>{
        const userID=req.user._id
         const publicationID=req.params.publicationID;
@@ -225,22 +248,7 @@ const PostSkill= catchAsync(async (req,res)=>{
    
     res.status(200).json({ok:true})
 })
-const updateSkill = catchAsync(async (req, res) => {
-  const userID = req.user._id;
-  const skillID = req.params.skillID;
-  const skill = await Users.findOneAndUpdate(
-    { _id: userID, 'skills._id': skillID },
-    {
-      $set: {
-        'skills.$.skill': req.body.skill,
-        'skills.$.level': req.body.level
-      }
-    },
-    { new: true } // returns the updated document
-  );
 
-  res.status(200).json({ skill });
-});
 
 const deleteSkill = catchAsync(async (req, res) => {
   const userID = req.user._id;

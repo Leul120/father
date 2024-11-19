@@ -18,10 +18,10 @@ import { createContext, useEffect, useState } from 'react';
 import HorizontalNavbar from './Navigation';
 export const  AppContext=createContext()
 function App() {
-  const [token,setToken]=useState("")
-  useEffect(()=>{
-    setToken(window.localStorage.getItem("token"));
-  },[])
+  
+ 
+    const token=window.localStorage.getItem("token")
+  
   
   const [user,setUser]=useState({})
   return (

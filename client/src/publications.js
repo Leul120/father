@@ -30,7 +30,7 @@ const {token}=useContext(AppContext)
 
   const fetchPublications = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user`,{headers:{
+      const response = await axios.get(`api/get-user`,{headers:{
         Authorization:`Bearer ${token}`
       }});
       setPublications(response.data.user.publications);
@@ -41,7 +41,7 @@ const {token}=useContext(AppContext)
 
   const handleDelete = async (id) => {
     try {
-      const response=await axios.delete(`${process.env.REACT_APP_URL}/delete-publication/${id}`,{headers:{
+      const response=await axios.delete(`api/delete-publication/${id}`,{headers:{
         Authorization:`Bearer ${token}`
       }});
       message.success('Publication deleted successfully');
@@ -68,13 +68,13 @@ const {token}=useContext(AppContext)
 
     try {
       if (editingPublication) {
-        await axios.put(`${process.env.REACT_APP_URL}/update-publication/${editingPublication._id}`, result.publications[0],{headers:{
+        await axios.put(`api/update-publication/${editingPublication._id}`, result.publications[0],{headers:{
         Authorization:`Bearer ${token}`
       }});
 
         message.success('Publication updated successfully');
       } else {
-        await axios.post(`${process.env.REACT_APP_URL}/post-publication`, result,{headers:{
+        await axios.post(`api/post-publication`, result,{headers:{
         Authorization:`Bearer ${token}`
       }});
         message.success('Publication added successfully');

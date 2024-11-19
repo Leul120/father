@@ -8,7 +8,7 @@ const UserProfileForm = () => {
   const [userProfile, setUserProfile] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const {user}=useContext(AppContext)
+  const {token}=useContext(AppContext)
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -21,9 +21,12 @@ const UserProfileForm = () => {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${user._id}`);
+      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user`,{headers:{
+        Authorization:`Bearer ${token}`
+      }});
       setUserProfile(response.data.user);
     } catch (error) {
+      console.log(error)
       message.error('Failed to fetch user profile');
     }
   };
@@ -31,7 +34,9 @@ const UserProfileForm = () => {
   const handleSave = async (values) => {
     setLoading(true);
     try {
-      await axios.put(`${process.env.REACT_APP_URL}/update-user/${user._id}`, values);
+      await axios.put(`${process.env.REACT_APP_URL}/update-user`, values,{headers:{
+        Authorization:`Bearer ${token}`
+      }});
       message.success('Profile updated successfully');
       fetchUserProfile();
     } catch (error) {

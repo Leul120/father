@@ -293,19 +293,17 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import pic from './Dr._Melkamus_Photo_.jpg'
+
 import { 
   FaUserGraduate, 
   FaBriefcase, 
   FaAward, 
-  FaBook, 
   FaLanguage,
   FaCertificate,
   FaEnvelope, 
   FaPhone, 
   FaGlobe,
   FaChevronDown,
-  FaGithub,
   FaLinkedin,
   FaTwitter,
   FaExternalLinkAlt,
@@ -326,7 +324,7 @@ import { CiLogin } from "react-icons/ci";
 import { Upload } from 'antd';
 
 const ProfessionalProfile = () => {
-  const [activeSection, setActiveSection] = useState('summary');
+  // const [activeSection, setActiveSection] = useState('summary');
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
   
@@ -716,7 +714,7 @@ const AwardCard = ({ award, index }) => {
 };
 
 const PublicationCard = ({ publication, index }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  // const [isExpanded, setIsExpanded] = useState(false);
   const [ref, inView] = useInView({
     threshold: 0.1,
     triggerOnce: true

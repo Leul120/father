@@ -10,9 +10,8 @@ const LanguageForm = () => {
   const [editingLanguage, setEditingLanguage] = useState(null);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const {user}=useContext(AppContext)
-  const token = window.localStorage.getItem('token');
-  const decoded = jwtDecode(token);
+  const {token}=useContext(AppContext)
+  
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -31,7 +30,9 @@ const LanguageForm = () => {
 
   const fetchLanguages = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${user._id}`);
+      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user`,{headers:{
+        Authorization:`Bearer ${token}`
+      }});
       setLanguages(response.data.user.languages);
     } catch (error) {
       message.error('Failed to fetch languages');
@@ -40,7 +41,9 @@ const LanguageForm = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_URL}/delete-language/${user._id}/${id}`);
+      await axios.delete(`${process.env.REACT_APP_URL}/delete-language/${id}`,{headers:{
+        Authorization:`Bearer ${token}`
+      }});
       message.success('Language deleted successfully');
       fetchLanguages();
     } catch (error) {
@@ -64,10 +67,14 @@ const LanguageForm = () => {
 
     try {
       if (editingLanguage) {
-        await axios.put(`${process.env.REACT_APP_URL}/update-language/${user._id}/${editingLanguage._id}`, result.languages[0]);
+        await axios.put(`${process.env.REACT_APP_URL}/update-language/${editingLanguage._id}`, result.languages[0],{headers:{
+        Authorization:`Bearer ${token}`
+      }});
         message.success('Language updated successfully');
       } else {
-        await axios.post(`${process.env.REACT_APP_URL}/post-language/${user._id}`, result);
+        await axios.post(`${process.env.REACT_APP_URL}/post-language`, result,{headers:{
+        Authorization:`Bearer ${token}`
+      }});
         message.success('Language added successfully');
       }
       fetchLanguages();

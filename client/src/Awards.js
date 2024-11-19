@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Form, Input, Button, Card, List, message, Modal } from 'antd';
+import { Form, Input, Button, Card, List, message, Modal, Skeleton } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import axios from 'axios';
@@ -7,11 +7,12 @@ import { AppContext } from './App';
 
 const AwardsForm = () => {
   const [awards, setAwards] = useState([]);
+  const [loadingAwards, setLoadingAwards] = useState(true); // Added loading state for awards
   const [editingAward, setEditingAward] = useState(null);
   const [visible, setVisible] = useState(false);
-  const [loading, setLoading] = useState(false)
-  const {user,token}=useContext(AppContext)
-  
+  const [loading, setLoading] = useState(false);
+  const { user, token } = useContext(AppContext);
+
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -27,22 +28,28 @@ const AwardsForm = () => {
   }, [editingAward, form]);
 
   const fetchAwards = async () => {
+    setLoadingAwards(true); // Show loading skeleton
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user`,
-        {headers:{
-        Authorization:`Bearer ${token}`
-      }})
+      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setAwards(response.data.user.awards);
     } catch (error) {
       message.error('Failed to fetch awards');
+    } finally {
+      setLoadingAwards(false); // Hide loading skeleton
     }
   };
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_URL}/delete-award/${id}`,{headers:{
-        Authorization:`Bearer ${token}`
-      }});
+      await axios.delete(`${process.env.REACT_APP_URL}/delete-award/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       message.success('Award deleted successfully');
       fetchAwards();
     } catch (error) {
@@ -65,14 +72,18 @@ const AwardsForm = () => {
 
     try {
       if (editingAward) {
-        await axios.put(`${process.env.REACT_APP_URL}/update-award/${editingAward._id}`, values,{headers:{
-        Authorization:`Bearer ${token}`
-      }});
+        await axios.put(`${process.env.REACT_APP_URL}/update-award/${editingAward._id}`, values, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         message.success('Award updated successfully');
       } else {
-        await axios.post(`${process.env.REACT_APP_URL}/post-award`, { awards: [values] },{headers:{
-        Authorization:`Bearer ${token}`
-      }});
+        await axios.post(`${process.env.REACT_APP_URL}/post-award`, { awards: [values] }, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         message.success('Award added successfully');
       }
       fetchAwards();
@@ -88,33 +99,37 @@ const AwardsForm = () => {
   return (
     <div className='px-3 pt-3 h-full bg-stone-50 min-h-screen'>
       <Card bordered={false} title="Awards">
-        <List
-          itemLayout="horizontal"
-          dataSource={awards}
-          renderItem={(award) => (
-            <List.Item
-              actions={[
-                <Button
-                  type="link"
-                  icon={<EditOutlined />}
-                  onClick={() => handleEdit(award)}
-                />,
-                
-                <Button
-                  type="link"
-                  icon={<DeleteOutlined />}
-                  onClick={() => handleDelete(award._id)}
-                />,
-              ]}
-            >
-              <List.Item.Meta
-                title={`${award.title}`}
-                description={`${award.institution}, ${award.year}`}
-              />
-              <div>{award.description}</div>
-            </List.Item>
-          )}
-        />
+        {loadingAwards ? (
+          // Show skeleton loading
+          <Skeleton active paragraph={{ rows: 4 }} />
+        ) : (
+          <List
+            itemLayout="horizontal"
+            dataSource={awards}
+            renderItem={(award) => (
+              <List.Item
+                actions={[
+                  <Button
+                    type="link"
+                    icon={<EditOutlined />}
+                    onClick={() => handleEdit(award)}
+                  />,
+                  <Button
+                    type="link"
+                    icon={<DeleteOutlined />}
+                    onClick={() => handleDelete(award._id)}
+                  />,
+                ]}
+              >
+                <List.Item.Meta
+                  title={`${award.title}`}
+                  description={`${award.institution}, ${award.year}`}
+                />
+                <div>{award.description}</div>
+              </List.Item>
+            )}
+          />
+        )}
         <Button
           type="dashed"
           icon={<PlusOutlined />}
@@ -123,7 +138,6 @@ const AwardsForm = () => {
         >
           Add Award
         </Button>
-
       </Card>
 
       <Modal

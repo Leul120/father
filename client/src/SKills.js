@@ -10,7 +10,7 @@ const SkillForm = () => {
   const [editingSkill, setEditingSkill] = useState(null);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const {user}=useContext(AppContext)
+  const {token}=useContext(AppContext)
   
   const [form] = Form.useForm();
 
@@ -30,7 +30,9 @@ const SkillForm = () => {
 
   const fetchSkills = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${user._id}`);
+      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user`,{headers:{
+        Authorization:`Bearer ${token}`
+      }});
       setSkills(response.data.user.skills);
     } catch (error) {
       message.error('Failed to fetch skills');
@@ -39,7 +41,9 @@ const SkillForm = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_URL}/delete-skill/${user._id}/${id}`);
+      await axios.delete(`${process.env.REACT_APP_URL}/delete-skill/${id}`,{headers:{
+        Authorization:`Bearer ${token}`
+      }});
       message.success('Skill deleted successfully');
       fetchSkills();
     } catch (error) {
@@ -63,10 +67,14 @@ const SkillForm = () => {
 
     try {
       if (editingSkill) {
-        await axios.put(`${process.env.REACT_APP_URL}/update-skill/${user._id}/${editingSkill._id}`, result.skills[0]);
+        await axios.put(`${process.env.REACT_APP_URL}/update-skill/${editingSkill._id}`, result.skills[0],{headers:{
+        Authorization:`Bearer ${token}`
+      }});
         message.success('Skill updated successfully');
       } else {
-        await axios.post(`${process.env.REACT_APP_URL}/post-skill${user._id}`, result);
+        await axios.post(`${process.env.REACT_APP_URL}/post-skill`, result,{headers:{
+        Authorization:`Bearer ${token}`
+      }});
         message.success('Skill added successfully');
       }
       fetchSkills();

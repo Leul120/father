@@ -24,7 +24,7 @@ const Login = () => {
     setLoading(true);
     try {
       // Use environment variable for API base URL
-      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/login`, {
+      const response = await axios.post(`${process.env.REACT_APP_URL}/login`, {
         email: values.email,
         password: values.password
       });

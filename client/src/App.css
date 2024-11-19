@@ -16,7 +16,9 @@
   grid-gap: 20px;
   
 }
-
+.navbar-container .bg-white {
+  background-color: #fff !important;
+}
 .card {
   background-color: #fff;
   border-radius: 8px;

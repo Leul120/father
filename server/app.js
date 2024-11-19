@@ -20,7 +20,7 @@ app.use('/api',userRoute)
 
 
 const hostname='0.0.0.0'
-const port = process.env.PORT || 8002;
+const port = process.env.PORT || 8000;
 const start=async ()=>{
     try{ 
         await connectDB(process.env.MONGO_URI)

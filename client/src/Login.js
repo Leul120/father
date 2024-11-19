@@ -12,11 +12,11 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate=useNavigate()
   const {token}=useContext(AppContext)
-  useEffect(()=>{
-    if(token){
-      navigate("/")
-    }
-  },[token])
+  // useEffect(()=>{
+  //   if(token){
+  //     navigate("/")
+  //   }
+  // },[token])
   const handleLogin =async (values) => {
     setLoading(true);
     try{
@@ -32,6 +32,7 @@ const Login = () => {
         description: "You have logged in successfully!",
       });
       // window.location.reload()
+      navigate('/')
     }, 2000);
     
     

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Form, Input, Button, Card, List, message, Modal, Select } from 'antd';
+import { Form, Input, Button, Card, List, message, Modal, Select, Skeleton } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { AppContext } from './App';
@@ -8,9 +8,10 @@ const SkillForm = () => {
   const [skills, setSkills] = useState([]);
   const [editingSkill, setEditingSkill] = useState(null);
   const [visible, setVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const {token}=useContext(AppContext)
-  
+  const [loading, setLoading] = useState(false); // Save operation loading
+  const [fetching, setFetching] = useState(true); // Fetching data loading
+  const { token } = useContext(AppContext);
+
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -28,21 +29,29 @@ const SkillForm = () => {
   }, [editingSkill, form]);
 
   const fetchSkills = async () => {
+    setFetching(true);
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user`,{headers:{
-        Authorization:`Bearer ${token}`
-      }});
+      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setSkills(response.data.user.skills);
     } catch (error) {
       message.error('Failed to fetch skills');
+    } finally {
+      setFetching(false);
     }
   };
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_URL}/delete-skill/${id}`,{headers:{
-        Authorization:`Bearer ${token}`
-      }});
+      const response=await axios.delete(`${process.env.REACT_APP_URL}/delete-skill/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response.data)
       message.success('Skill deleted successfully');
       fetchSkills();
     } catch (error) {
@@ -62,18 +71,28 @@ const SkillForm = () => {
 
   const handleSave = async (values) => {
     setLoading(true);
+    console.log(editingSkill)
     const result = { skills: [values] };
-
+    console.log(result.skills[0])
     try {
       if (editingSkill) {
-        await axios.put(`${process.env.REACT_APP_URL}/update-skill/${editingSkill._id}`, result.skills[0],{headers:{
-        Authorization:`Bearer ${token}`
-      }});
+        const response=await axios.put(
+          `${process.env.REACT_APP_URL}/update-skill/${editingSkill._id}`,
+          result.skills[0],
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(response.data)
         message.success('Skill updated successfully');
       } else {
-        await axios.post(`${process.env.REACT_APP_URL}/post-skill`, result,{headers:{
-        Authorization:`Bearer ${token}`
-      }});
+        await axios.post(`${process.env.REACT_APP_URL}/post-skill`, result, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         message.success('Skill added successfully');
       }
       fetchSkills();
@@ -87,41 +106,47 @@ const SkillForm = () => {
   };
 
   return (
-    <div className='px-3 pt-3 h-full bg-stone-50 min-h-screen'>
+    <div className="px-3 pt-3 h-full bg-stone-50 min-h-screen">
       <Card bordered={false} title="Skills">
-        <List
-          itemLayout="horizontal"
-          dataSource={skills}
-          renderItem={(skill) => (
-            <List.Item
-              actions={[
-                <Button
-                  type="link"
-                  icon={<EditOutlined />}
-                  onClick={() => handleEdit(skill)}
-                />,
-                <Button
-                  type="link"
-                  icon={<DeleteOutlined />}
-                  onClick={() => handleDelete(skill._id)}
-                />,
-              ]}
+        {fetching ? (
+          <Skeleton active paragraph={{ rows: 6 }} />
+        ) : (
+          <>
+            <List
+              itemLayout="horizontal"
+              dataSource={skills}
+              renderItem={(skill) => (
+                <List.Item
+                  actions={[
+                    <Button
+                      type="link"
+                      icon={<EditOutlined />}
+                      onClick={() => handleEdit(skill)}
+                    />,
+                    <Button
+                      type="link"
+                      icon={<DeleteOutlined />}
+                      onClick={() => handleDelete(skill._id)}
+                    />,
+                  ]}
+                >
+                  <List.Item.Meta
+                    title={`${skill.skill}`}
+                    description={`Level: ${skill.level}`}
+                  />
+                </List.Item>
+              )}
+            />
+            <Button
+              type="dashed"
+              icon={<PlusOutlined />}
+              onClick={() => setVisible(true)}
+              style={{ marginTop: 16 }}
             >
-              <List.Item.Meta
-                title={`${skill.skill}`}
-                description={`Level: ${skill.level}`}
-              />
-            </List.Item>
-          )}
-        />
-        <Button
-          type="dashed"
-          icon={<PlusOutlined />}
-          onClick={() => setVisible(true)}
-          style={{ marginTop: 16 }}
-        >
-          Add Skill
-        </Button>
+              Add Skill
+            </Button>
+          </>
+        )}
       </Card>
 
       <Modal

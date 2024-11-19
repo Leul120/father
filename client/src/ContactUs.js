@@ -16,7 +16,7 @@ const ContactUs = () => {
     try {
       setLoading(true);
       console.log(data)
-      const response=await axios.post(`${process.env.REACT_APP_URL}/contact-us`, data);
+      const response=await axios.post(`api/contact-us`, data);
       setLoading(false);
       console.log(response.data)
       message.success("Message sent successfully!");

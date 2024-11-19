@@ -30,7 +30,7 @@ const SkillForm = () => {
 
   const fetchSkills = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user`,{headers:{
+      const response = await axios.get(`api/get-user`,{headers:{
         Authorization:`Bearer ${token}`
       }});
       setSkills(response.data.user.skills);
@@ -41,7 +41,7 @@ const SkillForm = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_URL}/delete-skill/${id}`,{headers:{
+      await axios.delete(`api/delete-skill/${id}`,{headers:{
         Authorization:`Bearer ${token}`
       }});
       message.success('Skill deleted successfully');
@@ -67,12 +67,12 @@ const SkillForm = () => {
 
     try {
       if (editingSkill) {
-        await axios.put(`${process.env.REACT_APP_URL}/update-skill/${editingSkill._id}`, result.skills[0],{headers:{
+        await axios.put(`api/update-skill/${editingSkill._id}`, result.skills[0],{headers:{
         Authorization:`Bearer ${token}`
       }});
         message.success('Skill updated successfully');
       } else {
-        await axios.post(`${process.env.REACT_APP_URL}/post-skill`, result,{headers:{
+        await axios.post(`api/post-skill`, result,{headers:{
         Authorization:`Bearer ${token}`
       }});
         message.success('Skill added successfully');

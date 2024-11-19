@@ -1,7 +1,7 @@
 {
   "name": "client",
   "version": "0.1.0",
-  "proxy": "http://localhost:8000",
+  "proxy": "https://father-two.vercel.app",
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^5.4.0",

@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Form, Input, Button, Card, List, message, Modal, Select } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import axios from 'axios';
-import {jwtDecode} from 'jwt-decode';
 import { AppContext } from './App';
 
 const SkillForm = () => {

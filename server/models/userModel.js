@@ -7,6 +7,7 @@ const userSchema=new mongoose.Schema({
     lowercase:true},
     password:String,
   title: String,
+  role:{type:String,enum:["admin","user"],default:"user"},
   contact: {
     phone: String,
     email: String,
@@ -16,7 +17,10 @@ const userSchema=new mongoose.Schema({
     country: String,
   },
   summary: String,
-
+  profilePicture:[{
+    imageUrl:String,
+    publicId:String,
+  }],
   experiences: [
       {
         position: String,

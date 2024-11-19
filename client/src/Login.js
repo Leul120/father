@@ -10,7 +10,7 @@ const { Title, Text } = Typography;
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { setToken } = useContext(AppContext);
+  // const { setToken } = useContext(AppContext);
 
   // Uncomment and adjust the useEffect for token-based redirection
   useEffect(() => {
@@ -41,7 +41,7 @@ const Login = () => {
       localStorage.setItem('user', JSON.stringify(user));
 
       // Update context with token
-      setToken(token);
+      // setToken(token);
 
       // Success notification
       notification.success({

@@ -32,7 +32,7 @@ const EducationForm = () => {
 
   const fetchEducation = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user`,{headers:{
+      const response = await axios.get(`api/get-user`,{headers:{
         Authorization:`Bearer ${token}`
       }});
       setEducationList(response.data.user?.educations.map(edu => ({
@@ -46,7 +46,7 @@ const EducationForm = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_URL}/delete-education/${id}`,{headers:{
+      await axios.delete(`api/delete-education/${id}`,{headers:{
         Authorization:`Bearer ${token}`
       }});
       message.success('Education deleted successfully');
@@ -72,12 +72,12 @@ const EducationForm = () => {
 
     try {
       if (editingEducation) {
-        await axios.put(`${process.env.REACT_APP_URL}/update-education/${editingEducation._id}`, result.educations[0],{headers:{
+        await axios.put(`api/update-education/${editingEducation._id}`, result.educations[0],{headers:{
         Authorization:`Bearer ${token}`
       }});
         message.success('Education updated successfully');
       } else {
-        await axios.post(`${process.env.REACT_APP_URL}/post-education`, result,{headers:{
+        await axios.post(`api/post-education`, result,{headers:{
         Authorization:`Bearer ${token}`
       }});
         message.success('Education added successfully');

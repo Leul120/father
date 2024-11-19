@@ -10,7 +10,7 @@ const PublicationForm = () => {
   const [editingPublication, setEditingPublication] = useState(null);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-const {user}=useContext(AppContext)
+const {token}=useContext(AppContext)
 
   const [form] = Form.useForm();
 
@@ -30,7 +30,9 @@ const {user}=useContext(AppContext)
 
   const fetchPublications = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${user._id}`);
+      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user`,{headers:{
+        Authorization:`Bearer ${token}`
+      }});
       setPublications(response.data.user.publications);
     } catch (error) {
       message.error('Failed to fetch publications');
@@ -39,7 +41,9 @@ const {user}=useContext(AppContext)
 
   const handleDelete = async (id) => {
     try {
-      const response=await axios.delete(`${process.env.REACT_APP_URL}/delete-publication/${user._id}/${id}`);
+      const response=await axios.delete(`${process.env.REACT_APP_URL}/delete-publication/${id}`,{headers:{
+        Authorization:`Bearer ${token}`
+      }});
       message.success('Publication deleted successfully');
       console.log(response.data)
       fetchPublications();
@@ -64,11 +68,15 @@ const {user}=useContext(AppContext)
 
     try {
       if (editingPublication) {
-        await axios.put(`${process.env.REACT_APP_URL}/update-publication/${user._id}/${editingPublication._id}`, result.publications[0]);
+        await axios.put(`${process.env.REACT_APP_URL}/update-publication/${editingPublication._id}`, result.publications[0],{headers:{
+        Authorization:`Bearer ${token}`
+      }});
 
         message.success('Publication updated successfully');
       } else {
-        await axios.post(`${process.env.REACT_APP_URL}/post-publication${user._id}`, result);
+        await axios.post(`${process.env.REACT_APP_URL}/post-publication`, result,{headers:{
+        Authorization:`Bearer ${token}`
+      }});
         message.success('Publication added successfully');
       }
       fetchPublications();

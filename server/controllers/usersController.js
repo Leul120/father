@@ -302,11 +302,11 @@ const deleteSkill = catchAsync(async (req, res) => {
   const skillID = req.params.skillID;
 
   // Use findOneAndUpdate with $pull to remove the skill from the array
-  await Users.findOneAndUpdate(
+  const user=await Users.findOneAndUpdate(
     { _id: userID },
     { $pull: { skills: { _id: skillID } } }
   );
-
+  console.log(user.skills)
   res.status(200).json({ message: 'Skill deleted successfully' });
 });
 

@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Form, Input, Button, Card, List, message, Modal } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import {jwtDecode} from 'jwt-decode';
 import moment from 'moment';
+import { AppContext } from './App';
 
 const CertificatesForm = () => {
   const [certificates, setCertificates] = useState([]);
   const [editingCertificate, setEditingCertificate] = useState(null);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const token = window.localStorage.getItem('token');
-  const decoded = jwtDecode(token);
+  const {token}=useContext(AppContext)
+ 
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -29,7 +29,9 @@ const CertificatesForm = () => {
 
   const fetchCertificates = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${decoded.id}`);
+      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user`,{headers:{
+        Authorization:`Bearer ${token}`
+      }});
       setCertificates(response.data.user.certificates);
     } catch (error) {
       message.error('Failed to fetch certificates');
@@ -38,7 +40,9 @@ const CertificatesForm = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_URL}/user/delete-certificate/${decoded.id}/${id}`);
+      await axios.delete(`${process.env.REACT_APP_URL}/user/delete-certificate/${id}`,{headers:{
+        Authorization:`Bearer ${token}`
+      }});
       message.success('Certificate deleted successfully');
       fetchCertificates();
     } catch (error) {
@@ -61,10 +65,14 @@ const CertificatesForm = () => {
 
     try {
       if (editingCertificate) {
-        await axios.put(`${process.env.REACT_APP_URL}/update-certificate/${decoded.id}/${editingCertificate._id}`, values);
+        await axios.put(`${process.env.REACT_APP_URL}/update-certificate/${editingCertificate._id}`, values,{headers:{
+        Authorization:`Bearer ${token}`
+      }});
         message.success('Certificate updated successfully');
       } else {
-        await axios.post(`${process.env.REACT_APP_URL}/post-certificate${decoded.id}`, { certificates: [values] });
+        await axios.post(`${process.env.REACT_APP_URL}/post-certificate`, { certificates: [values] },{headers:{
+        Authorization:`Bearer ${token}`
+      }});
         message.success('Certificate added successfully');
       }
       fetchCertificates();

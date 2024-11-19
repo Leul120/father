@@ -29,7 +29,7 @@ const CertificatesForm = () => {
 
   const fetchCertificates = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user`,{headers:{
+      const response = await axios.get(`api/get-user`,{headers:{
         Authorization:`Bearer ${token}`
       }});
       setCertificates(response.data.user.certificates);
@@ -40,7 +40,7 @@ const CertificatesForm = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_URL}/user/delete-certificate/${id}`,{headers:{
+      await axios.delete(`api/user/delete-certificate/${id}`,{headers:{
         Authorization:`Bearer ${token}`
       }});
       message.success('Certificate deleted successfully');
@@ -65,12 +65,12 @@ const CertificatesForm = () => {
 
     try {
       if (editingCertificate) {
-        await axios.put(`${process.env.REACT_APP_URL}/update-certificate/${editingCertificate._id}`, values,{headers:{
+        await axios.put(`api/update-certificate/${editingCertificate._id}`, values,{headers:{
         Authorization:`Bearer ${token}`
       }});
         message.success('Certificate updated successfully');
       } else {
-        await axios.post(`${process.env.REACT_APP_URL}/post-certificate`, { certificates: [values] },{headers:{
+        await axios.post(`api/post-certificate`, { certificates: [values] },{headers:{
         Authorization:`Bearer ${token}`
       }});
         message.success('Certificate added successfully');

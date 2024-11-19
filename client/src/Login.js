@@ -1,15 +1,22 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "tailwindcss/tailwind.css";
 import { Button, Input, Form, Typography, notification } from "antd";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "./App";
 
 const { Title, Text } = Typography;
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate=useNavigate()
+  const {token}=useContext(AppContext)
+  useEffect(()=>{
+    if(token){
+      navigate("/")
+    }
+  },[token])
   const handleLogin =async (values) => {
     setLoading(true);
     try{
@@ -25,7 +32,8 @@ const Login = () => {
         description: "You have logged in successfully!",
       });
     }, 2000);
-    navigate("/")
+    window.location.reload()
+    
 }catch(error){
   setLoading(false)
     console.log(error)

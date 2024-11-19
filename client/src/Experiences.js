@@ -32,7 +32,7 @@ const ExperienceForm = () => {
 
   const fetchExperiences = async () => {
     try {
-      const response = await axios.get(`api/get-user`,{headers:{
+      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user`,{headers:{
         Authorization:`Bearer ${token}`
       }});
       setExperiences(response.data.user.experiences.map(exp => ({
@@ -47,7 +47,7 @@ const ExperienceForm = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`api/delete-experience/${id}`,{headers:{
+      await axios.delete(`${process.env.REACT_APP_URL}/delete-experience/${id}`,{headers:{
         Authorization:`Bearer ${token}`
       }});
       message.success('Experience deleted successfully');
@@ -73,12 +73,12 @@ const ExperienceForm = () => {
 console.log(result.experiences[0])
     try {
       if (editingExperience) {
-        await axios.put(`api/update-experience/${editingExperience._id}`, result.experiences[0],{headers:{
+        await axios.put(`${process.env.REACT_APP_URL}/update-experience/${editingExperience._id}`, result.experiences[0],{headers:{
         Authorization:`Bearer ${token}`
       }});
         message.success('Experience updated successfully');
       } else {
-        await axios.post(`api/post-experience`, result,{headers:{
+        await axios.post(`${process.env.REACT_APP_URL}/post-experience`, result,{headers:{
         Authorization:`Bearer ${token}`
       }});
         message.success('Experience added successfully');

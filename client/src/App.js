@@ -13,14 +13,24 @@ import Login from './Login';
 import UserProfileForm from './UserProfile';
 import ContactUs from './ContactUs';
 import LanguageForm from './Languages';
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
+
+import HorizontalNavbar from './Navigation';
 export const  AppContext=createContext()
 function App() {
+  const [token,setToken]=useState("")
+  useEffect(()=>{
+    setToken(window.localStorage.getItem("token"));
+  },[])
+  
   const [user,setUser]=useState({})
   return (
     <div className="App">
-    <AppContext.Provider value={{user,setUser}}>
+    <AppContext.Provider value={{user,setUser,token}}>
       <Router>
+      {token &&<div className="navbar-container">
+          <HorizontalNavbar />
+        </div>}
         <Routes>
           <Route path='/' element={<ProfessionalProfile/>}/>
           <Route path='/awards' element={<AwardsForm/>}/>
@@ -34,7 +44,9 @@ function App() {
           <Route path='/publications' element={<PublicationForm/>}/>
           <Route path='/user-profile' element={<UserProfileForm/>}/>
           <Route path="/contact-us" element={<ContactUs/>}/>
+          
         </Routes>
+        
       </Router>
       </AppContext.Provider>
     </div>

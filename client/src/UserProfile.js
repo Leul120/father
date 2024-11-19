@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Form, Input, Button, Card, message } from 'antd';
 import axios from 'axios';
-import {jwtDecode} from 'jwt-decode';
 import { AppContext } from './App';
 
 const UserProfileForm = () => {

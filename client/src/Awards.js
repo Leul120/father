@@ -12,7 +12,7 @@ const AwardsForm = () => {
   const [editingAward, setEditingAward] = useState(null);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false)
-  const {user}=useContext(AppContext)
+  const {user,token}=useContext(AppContext)
   
   const [form] = Form.useForm();
 
@@ -30,7 +30,10 @@ const AwardsForm = () => {
 
   const fetchAwards = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user/${user._id}`);
+      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user`,
+        {headers:{
+        Authorization:`Bearer ${token}`
+      }})
       setAwards(response.data.user.awards);
     } catch (error) {
       message.error('Failed to fetch awards');
@@ -39,7 +42,9 @@ const AwardsForm = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_URL}/delete-award/${user._id}/${id}`);
+      await axios.delete(`${process.env.REACT_APP_URL}/delete-award/${id}`,{headers:{
+        Authorization:`Bearer ${token}`
+      }});
       message.success('Award deleted successfully');
       fetchAwards();
     } catch (error) {
@@ -62,10 +67,14 @@ const AwardsForm = () => {
 
     try {
       if (editingAward) {
-        await axios.put(`${process.env.REACT_APP_URL}/update-award/${user._id}/${editingAward._id}`, values);
+        await axios.put(`${process.env.REACT_APP_URL}/update-award/${editingAward._id}`, values,{headers:{
+        Authorization:`Bearer ${token}`
+      }});
         message.success('Award updated successfully');
       } else {
-        await axios.post(`${process.env.REACT_APP_URL}/post-award/${user._id}`, { awards: [values] });
+        await axios.post(`${process.env.REACT_APP_URL}/post-award`, { awards: [values] },{headers:{
+        Authorization:`Bearer ${token}`
+      }});
         message.success('Award added successfully');
       }
       fetchAwards();

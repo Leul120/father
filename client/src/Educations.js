@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Form, Input, Button, Card, List, message, Modal, DatePicker, InputNumber } from 'antd';
+import { Form, Input, Button, Card, List, message, Modal, DatePicker, InputNumber, Skeleton } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import axios from 'axios';
@@ -10,7 +10,8 @@ const EducationForm = () => {
   const [editingEducation, setEditingEducation] = useState(null);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const {token}=useContext(AppContext)
+  const [skeletonLoading, setSkeletonLoading] = useState(true);
+  const { token } = useContext(AppContext);
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -29,24 +30,31 @@ const EducationForm = () => {
   }, [editingEducation, form]);
 
   const fetchEducation = async () => {
+    setSkeletonLoading(true);
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user`,{headers:{
-        Authorization:`Bearer ${token}`
-      }});
+      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setEducationList(response.data.user?.educations.map(edu => ({
         ...edu,
         graduationDate: moment(edu.graduationDate),
       })));
     } catch (error) {
       message.error('Failed to fetch education');
+    } finally {
+      setSkeletonLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_URL}/delete-education/${id}`,{headers:{
-        Authorization:`Bearer ${token}`
-      }});
+      await axios.delete(`${process.env.REACT_APP_URL}/delete-education/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       message.success('Education deleted successfully');
       fetchEducation();
     } catch (error) {
@@ -70,14 +78,18 @@ const EducationForm = () => {
 
     try {
       if (editingEducation) {
-        await axios.put(`${process.env.REACT_APP_URL}/update-education/${editingEducation._id}`, result.educations[0],{headers:{
-        Authorization:`Bearer ${token}`
-      }});
+        await axios.put(`${process.env.REACT_APP_URL}/update-education/${editingEducation._id}`, result.educations[0], {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         message.success('Education updated successfully');
       } else {
-        await axios.post(`${process.env.REACT_APP_URL}/post-education`, result,{headers:{
-        Authorization:`Bearer ${token}`
-      }});
+        await axios.post(`${process.env.REACT_APP_URL}/post-education`, result, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         message.success('Education added successfully');
       }
       fetchEducation();
@@ -93,33 +105,37 @@ const EducationForm = () => {
   return (
     <div className='px-3 pt-3 h-full bg-stone-50 min-h-screen'>
       <Card bordered={false} title="Education">
-        <List
-          itemLayout="horizontal"
-          dataSource={educationList}
-          renderItem={(edu) => (
-            <List.Item
-              actions={[
-                <Button
-                  type="link"
-                  icon={<EditOutlined />}
-                  onClick={() => handleEdit(edu)}
-                />,
-                <Button
-                  type="link"
-                  icon={<DeleteOutlined />}
-                  onClick={() => handleDelete(edu._id)}
-                />,
-              ]}
-            >
-              <List.Item.Meta
-                title={`${edu.degree} in ${edu.field}`}
-                description={`${edu.institution}, ${edu.location} (GPA: ${edu.gpa})`}
-              />
-              <div>Graduated: {moment(edu.graduationDate).format('YYYY-MM-DD')}</div>
-              <div>Thesis: {edu.thesis}</div>
-            </List.Item>
-          )}
-        />
+        {skeletonLoading ? (
+          <Skeleton active paragraph={{ rows: 4 }} />
+        ) : (
+          <List
+            itemLayout="horizontal"
+            dataSource={educationList}
+            renderItem={(edu) => (
+              <List.Item
+                actions={[
+                  <Button
+                    type="link"
+                    icon={<EditOutlined />}
+                    onClick={() => handleEdit(edu)}
+                  />,
+                  <Button
+                    type="link"
+                    icon={<DeleteOutlined />}
+                    onClick={() => handleDelete(edu._id)}
+                  />,
+                ]}
+              >
+                <List.Item.Meta
+                  title={`${edu.degree} in ${edu.field}`}
+                  description={`${edu.institution}, ${edu.location} (GPA: ${edu.gpa})`}
+                />
+                <div>Graduated: {moment(edu.graduationDate).format('YYYY-MM-DD')}</div>
+                <div>Thesis: {edu.thesis}</div>
+              </List.Item>
+            )}
+          />
+        )}
         <Button
           type="dashed"
           icon={<PlusOutlined />}
@@ -128,7 +144,6 @@ const EducationForm = () => {
         >
           Add Education
         </Button>
-        
       </Card>
 
       <Modal

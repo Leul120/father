@@ -30,7 +30,7 @@ const AwardsForm = () => {
 
   const fetchAwards = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user`,
+      const response = await axios.get(`api/get-user`,
         {headers:{
         Authorization:`Bearer ${token}`
       }})
@@ -42,7 +42,7 @@ const AwardsForm = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_URL}/delete-award/${id}`,{headers:{
+      await axios.delete(`api/delete-award/${id}`,{headers:{
         Authorization:`Bearer ${token}`
       }});
       message.success('Award deleted successfully');
@@ -67,12 +67,12 @@ const AwardsForm = () => {
 
     try {
       if (editingAward) {
-        await axios.put(`${process.env.REACT_APP_URL}/update-award/${editingAward._id}`, values,{headers:{
+        await axios.put(`api/update-award/${editingAward._id}`, values,{headers:{
         Authorization:`Bearer ${token}`
       }});
         message.success('Award updated successfully');
       } else {
-        await axios.post(`${process.env.REACT_APP_URL}/post-award`, { awards: [values] },{headers:{
+        await axios.post(`api/post-award`, { awards: [values] },{headers:{
         Authorization:`Bearer ${token}`
       }});
         message.success('Award added successfully');

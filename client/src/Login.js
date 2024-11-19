@@ -13,7 +13,7 @@ const Login = () => {
   const handleLogin =async (values) => {
     setLoading(true);
     try{
-        const response=await axios.post(`${process.env.REACT_APP_URL}/login`,values)
+        const response=await axios.post(`api/login`,values)
         console.log(response.data)
         window.localStorage.setItem('token',response.data.token)
         window.localStorage.setItem('user',JSON.stringify(response.data.user))

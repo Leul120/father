@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Form, Input, Button, Card, List, message, Modal } from 'antd';
+import { Form, Input, Button, Card, List, message, Modal, Skeleton } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { AppContext } from './App';
@@ -9,7 +9,8 @@ const PublicationForm = () => {
   const [editingPublication, setEditingPublication] = useState(null);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-const {token}=useContext(AppContext)
+  const [fetching, setFetching] = useState(true); // Added fetching state
+  const { token } = useContext(AppContext);
 
   const [form] = Form.useForm();
 
@@ -28,23 +29,29 @@ const {token}=useContext(AppContext)
   }, [editingPublication, form]);
 
   const fetchPublications = async () => {
+    setFetching(true); // Start fetching
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user`,{headers:{
-        Authorization:`Bearer ${token}`
-      }});
+      const response = await axios.get(`${process.env.REACT_APP_URL}/get-user`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setPublications(response.data.user.publications);
     } catch (error) {
       message.error('Failed to fetch publications');
+    } finally {
+      setFetching(false); // End fetching
     }
   };
 
   const handleDelete = async (id) => {
     try {
-      const response=await axios.delete(`${process.env.REACT_APP_URL}/delete-publication/${id}`,{headers:{
-        Authorization:`Bearer ${token}`
-      }});
+      await axios.delete(`${process.env.REACT_APP_URL}/delete-publication/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       message.success('Publication deleted successfully');
-      console.log(response.data)
       fetchPublications();
     } catch (error) {
       message.error('Failed to delete publication');
@@ -67,15 +74,22 @@ const {token}=useContext(AppContext)
 
     try {
       if (editingPublication) {
-        await axios.put(`${process.env.REACT_APP_URL}/update-publication/${editingPublication._id}`, result.publications[0],{headers:{
-        Authorization:`Bearer ${token}`
-      }});
-
+        await axios.put(
+          `${process.env.REACT_APP_URL}/update-publication/${editingPublication._id}`,
+          result.publications[0],
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         message.success('Publication updated successfully');
       } else {
-        await axios.post(`${process.env.REACT_APP_URL}/post-publication`, result,{headers:{
-        Authorization:`Bearer ${token}`
-      }});
+        await axios.post(`${process.env.REACT_APP_URL}/post-publication`, result, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         message.success('Publication added successfully');
       }
       fetchPublications();
@@ -89,42 +103,57 @@ const {token}=useContext(AppContext)
   };
 
   return (
-    <div className='px-3 pt-3 h-full bg-stone-50 min-h-screen'>
+    <div className="px-3 pt-3 h-full bg-stone-50 min-h-screen">
       <Card bordered={false} title="Publications">
-        <List
-          itemLayout="horizontal"
-          dataSource={publications}
-          renderItem={(pub) => (
-            <List.Item
-              actions={[
-                <Button
-                  type="link"
-                  icon={<EditOutlined />}
-                  onClick={() => handleEdit(pub)}
-                />,
-                <Button
-                  type="link"
-                  icon={<DeleteOutlined />}
-                  onClick={() => handleDelete(pub._id)}
-                />,
-              ]}
+        {fetching ? (
+          <Skeleton active paragraph={{ rows: 4 }} /> // Skeleton during fetch
+        ) : (
+          <>
+            <List
+              itemLayout="horizontal"
+              dataSource={publications}
+              renderItem={(pub) => (
+                <List.Item
+                  actions={[
+                    <Button
+                      type="link"
+                      icon={<EditOutlined />}
+                      onClick={() => handleEdit(pub)}
+                    />,
+                    <Button
+                      type="link"
+                      icon={<DeleteOutlined />}
+                      onClick={() => handleDelete(pub._id)}
+                    />,
+                  ]}
+                >
+                  <List.Item.Meta
+                    title={pub.title}
+                    description={`Journal: ${pub.journal}, Volume: ${pub.volume}, Pages: ${pub.pages}, Year: ${pub.year}`}
+                  />
+                  <div>
+                    DOI:{' '}
+                    <a
+                      href={pub.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {pub.doi}
+                    </a>
+                  </div>
+                </List.Item>
+              )}
+            />
+            <Button
+              type="dashed"
+              icon={<PlusOutlined />}
+              onClick={() => setVisible(true)}
+              style={{ marginTop: 16 }}
             >
-              <List.Item.Meta
-                title={pub.title}
-                description={`Journal: ${pub.journal}, Volume: ${pub.volume}, Pages: ${pub.pages}, Year: ${pub.year}`}
-              />
-              <div>DOI: <a href={pub.url} target="_blank" rel="noopener noreferrer">{pub.doi}</a></div>
-            </List.Item>
-          )}
-        />
-        <Button
-          type="dashed"
-          icon={<PlusOutlined />}
-          onClick={() => setVisible(true)}
-          style={{ marginTop: 16 }}
-        >
-          Add Publication
-        </Button>
+              Add Publication
+            </Button>
+          </>
+        )}
       </Card>
 
       <Modal
@@ -137,7 +166,17 @@ const {token}=useContext(AppContext)
           layout="vertical"
           onFinish={handleSave}
           form={form}
-          initialValues={editingPublication || { title: '', journal: '', volume: '', pages: '', year: '', url: '', doi: '' }}
+          initialValues={
+            editingPublication || {
+              title: '',
+              journal: '',
+              volume: '',
+              pages: '',
+              year: '',
+              url: '',
+              doi: '',
+            }
+          }
         >
           <Form.Item
             label="Title"

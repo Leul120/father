@@ -334,7 +334,7 @@ const ProfessionalProfile = () => {
     const loadData = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`${process.env.REACT_APP_URL}/get-all`);
+        const response = await fetch(`/api/get-all`);
         const data = await response.json();
         console.log(data.user)
         setUser(data.user);

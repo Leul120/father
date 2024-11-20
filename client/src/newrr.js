@@ -442,7 +442,7 @@ const ProfessionalProfile = () => {
 
 
           <motion.h1
-            className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500"
+            className="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500"
             animate={{ scale: isHovered ? 1.1 : 1 }}
             transition={{ duration: 0.3 }}
           >
@@ -453,7 +453,7 @@ const ProfessionalProfile = () => {
             {user.title}
           </motion.h2>
 
-          <div className="flex space-x-6 justify-center text-blue-200">
+          <div className="flex space-x-6 justify-center text-blue-200 flex-wrap">
             <ContactIcon Icon={FaEnvelope} text={user.contact?.email} />
             <ContactIcon Icon={FaPhone} text={user.contact?.phone} />
             <ContactIcon Icon={FaGlobe} text={`${user.contact?.city}, ${user.contact?.country}`} />
@@ -574,7 +574,7 @@ const ProfessionalProfile = () => {
       </Section>
 
       <Section title="Publications" Icon={FaBookOpen}>
-        <div className="space-y-2 grid grid-cols-2 gap-2">
+        <div className="space-y-2 grid grid-cols-1 md:grid-cols-2 gap-2">
           {user?.publications?.map((pub, index) => (
             <PublicationCard key={index} publication={pub} index={index} />
           ))}

@@ -698,13 +698,14 @@ const Header = memo(({ user, token }) => {
       </a>
       
       <div className="relative z-10 text-white text-center space-y-6 max-w-4xl px-4">
-        <div className="relative w-48 h-48 mx-auto group">
+        <div className="relative w-48 h-48 mx-auto group ">
           <motion.img
             src={user.profilePicture[user.profilePicture.length-1].imageUrl}
             alt={user.name}
-            className="w-full h-full rounded-full shadow-xl border-4 border-white"
+            className="w-full h-full rounded-full shadow-xl border-4 border-white "
             whileHover={{ scale: 1.1 }}
             transition={{ duration: 0.3 }}
+            loading='lazy'
           />
           {token && (
             <motion.div

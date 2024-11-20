@@ -9,7 +9,7 @@ import CertificatesForm from './Certificates';
 import EducationForm from './Educations';
 import ExperienceForm from './Experiences';
 import PublicationForm from './publications';
-import SkillForm from './Skills';
+import SkillForm from './SKills';
 import Login from './Login';
 import UserProfileForm from './UserProfile';
 import ContactUs from './ContactUs';

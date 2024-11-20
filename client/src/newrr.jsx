@@ -930,45 +930,54 @@ const AwardCard = ({ award, index }) => {
 };
 
 const PublicationCard = ({ publication, index }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [ref, inView] = useInView({
-    threshold: 0.1,
-    triggerOnce: true
+  const [ref, inView] = useInView({ 
+    threshold: 0.1, 
+    triggerOnce: true 
   });
 
   return (
-    <motion.div
-      ref={ref}
-      initial="hidden"
-      animate={inView ? "visible" : "hidden"}
+    <motion.div 
+      ref={ref} 
+      initial="hidden" 
+      animate={inView ? "visible" : "hidden"} 
       variants={{
         hidden: { opacity: 0, y: 30 },
         visible: { 
           opacity: 1, 
-          y: 0,
+          y: 0, 
           transition: { 
-            duration: 0.6,
-            delay: index * 0.15
-          }
+            duration: 0.6, 
+            delay: index * 0.15 
+          } 
         }
-      }}
-      className="bg-white/5 rounded-xl p-6 hover:bg-white/10 transition-colors duration-300"
+      }} 
+      className="bg-white/5 rounded-xl p-4 sm:p-6 hover:bg-white/10 transition-colors duration-300 w-full" 
     >
-      <div className="flex justify-between items-start">
-        <div className="flex-1">
-          <h3 className="text-xl font-semibold text-blue-400">{publication.title}</h3>
-          <p className="mt-2 text-gray-400">{publication.journal}</p>
-          <div className="flex items-center space-x-4 mt-2">
-            <span className="text-sm text-gray-500">Volume: {publication.volume}</span>
-            <span className="text-sm text-gray-500">Pages: {publication.pages}</span>
-            <span className="text-sm text-gray-500">{publication.year}</span>
+      <div className="flex flex-col sm:flex-row justify-between items-start space-y-4 sm:space-y-0">
+        <div className="flex-1 w-full">
+          <h3 className="text-lg sm:text-xl font-semibold text-blue-400">
+            {publication.title}
+          </h3>
+          <p className="mt-2 text-gray-400 text-sm sm:text-base">
+            {publication.journal}
+          </p>
+          <div className="flex flex-wrap items-center space-x-2 sm:space-x-4 mt-2">
+            <span className="text-xs sm:text-sm text-gray-500">
+              Volume: {publication.volume}
+            </span>
+            <span className="text-xs sm:text-sm text-gray-500">
+              Pages: {publication.pages}
+            </span>
+            <span className="text-xs sm:text-sm text-gray-500">
+              {publication.year}
+            </span>
           </div>
         </div>
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => window.open(publication.doi, '_blank')}
-          className="flex items-center space-x-2 text-blue-400 hover:text-blue-300"
+        <motion.button 
+          whileHover={{ scale: 1.1 }} 
+          whileTap={{ scale: 0.95 }} 
+          onClick={() => window.open(publication.doi, '_blank')} 
+          className="flex items-center space-x-2 text-blue-400 hover:text-blue-300 mt-2 sm:mt-0"
         >
           <FaExternalLinkAlt />
           <span className="text-sm">DOI</span>
@@ -977,6 +986,7 @@ const PublicationCard = ({ publication, index }) => {
     </motion.div>
   );
 };
+
 
 const LanguageCard = ({ language, index }) => {
   const [ref, inView] = useInView({

@@ -27,16 +27,15 @@ const MenuItem = ({ icon, to, children }) => {
 };
 
 const HorizontalNavbar = () => {
-  const { setUser, user,token } = useContext(AppContext);
+  const { setUser, user } = useContext(AppContext);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
 
   useEffect(() => {
     setUser(JSON.parse(window.localStorage.getItem('user')));
   }, [setUser]);
 
   const menuItems = [
-    {icon:"H",to:"/",label:"Home"},
+    { icon: 'H', to: '/', label: 'Home' },
     { icon: '👤', to: '/user-profile', label: 'Profile' },
     { icon: '💼', to: '/experiences', label: 'Experiences' },
     { icon: '🛠️', to: '/skills', label: 'Skills' },
@@ -48,17 +47,27 @@ const HorizontalNavbar = () => {
   ];
 
   const userMenu = (
-    <Menu>
-      <Menu.Item key="0">
-        <Link to="/settings">Settings</Link>
-      </Menu.Item>
-      <Menu.Item key="1">
-        <div onClick={()=>{
-          window.localStorage.removeItem("token")
-          window.location.reload()
-        }}>Logout</div>
-      </Menu.Item>
-    </Menu>
+    <Menu
+      items={[
+        {
+          key: '0',
+          label: <Link to="/settings">Settings</Link>,
+        },
+        {
+          key: '1',
+          label: (
+            <div
+              onClick={() => {
+                window.localStorage.removeItem('token');
+                window.location.reload();
+              }}
+            >
+              Logout
+            </div>
+          ),
+        },
+      ]}
+    />
   );
 
   return (
@@ -66,7 +75,6 @@ const HorizontalNavbar = () => {
       <div className="w-full mx-auto px-4 sm:px-6 lg:px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo/Brand */}
-          
 
           {/* Main Navigation */}
           <nav className="hidden xl:flex flex-1 justify-center overflow-x-auto">
@@ -81,7 +89,7 @@ const HorizontalNavbar = () => {
 
           {/* User Menu */}
           <div className="flex-shrink-0">
-            <Dropdown overlay={userMenu} trigger={['click']}>
+            <Dropdown menu={userMenu} trigger={['click']}>
               <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200">
                 <span className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
                   {user?.name?.[0] || 'U'}

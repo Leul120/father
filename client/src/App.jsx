@@ -38,8 +38,7 @@ function App() {
           <Route path='/experiences' element={<ExperienceForm/>}/>
           <Route path='/languages' element={<LanguageForm/>}/>
           <Route path='/skills' element={<SkillForm/>}/>
-          {/* <Route path='/signup' element={<Signup/>}/> */}
-          <Route path='login' element={<Login/>}/>
+          <Route path='/login' element={<Login/>}/>
           <Route path='/publications' element={<PublicationForm/>}/>
           <Route path='/user-profile' element={<UserProfileForm/>}/>
           <Route path="/contact-us" element={<ContactUs/>}/>

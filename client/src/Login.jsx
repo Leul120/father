@@ -20,55 +20,54 @@ const Login = () => {
     }
   }, [navigate]);
 
-  const handleLogin = async (values) => {
-    setLoading(true);
-    try {
-      // Use environment variable for API base URL
-      const response = await axios.post(`${apiUrl}/login`, {
-        email: values.email,
-        password: values.password
-      });
+ const handleLogin = async (values) => {
+  setLoading(true);
+  try {
+    // Use environment variable for API base URL
+    const response = await axios.post(`${apiUrl}/login`, {
+      email: values.email,
+      password: values.password,
+    });
 
-      // Destructure and validate response
-      const { token, user } = response.data;
-      
-      if (!token) {
-        throw new Error('No token received');
-      }
+    // Destructure and validate response
+    const { token, user } = response.data;
 
-      // Secure storage with more robust method
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-
-      // Update context with token
-      // setToken(token);
-
-      // Success notification
-      notification.success({
-        message: "Login Successful",
-        description: "Welcome back!",
-        duration: 2
-      });
-
-      // Navigate to home page
-      navigate('/');
-    } catch (error) {
-      // Improved error handling
-      const errorMessage = error.response?.data?.message 
-        || error.message 
-        || 'Login failed. Please try again.';
-
-      notification.error({
-        message: "Login Error",
-        description: errorMessage,
-        duration: 3
-      });
-
-      setLoading(false);
-    } finally {
-      setLoading(false);
+    if (!token) {
+      throw new Error("No token received");
     }
-  };
+
+    // Secure storage with more robust method
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
+
+    // Update context with token
+    // setToken(token);
+
+    // Success notification
+    notification.success({
+      message: "Login Successful",
+      description: "Welcome back!",
+      duration: 2,
+    });
+
+    // Refresh the page
+    window.location.reload();
+  } catch (error) {
+    // Improved error handling
+    const errorMessage =
+      error.response?.data?.message || error.message || "Login failed. Please try again.";
+
+    notification.error({
+      message: "Login Error",
+      description: errorMessage,
+      duration: 3,
+    });
+
+    setLoading(false);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-blue-300">

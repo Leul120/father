@@ -42,7 +42,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/publications" element={<PublicationForm />} />
           <Route path="/user-profile" element={<UserProfileForm />} />
-          <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="/contact" element={<ContactUs />} />
         </Routes>
       </Router>
     </AppContext.Provider>

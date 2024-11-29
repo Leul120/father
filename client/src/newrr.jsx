@@ -113,7 +113,11 @@ const Header = memo(({ user, token }) => {
           <CiLogin />
         </div>
       </a>
-      
+      <a href="/contact" className="text-white border p-1 rounded-md absolute top-3 left-3">
+        
+          contact me
+       
+      </a>
       <div className="relative z-10 text-white text-center space-y-6 max-w-4xl px-4">
         <div className="relative w-48 h-48 mx-auto group ">
           <motion.img
@@ -290,7 +294,7 @@ const CertificateCard = memo(({ certificate, index }) => {
       </div>
       <p className="mt-4 text-gray-300">{certificate.description}</p>
       <p className="mt-2 text-sm text-gray-400">
-        {new Date(certificate.date).toLocaleDateString()}
+        {new Date(certificate.date).toLocaleDateString()||""}
       </p>
     </motion.div>
   );

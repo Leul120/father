@@ -29,9 +29,9 @@ const ContactUs = () => {
   };
 
   return (
-    <div className='flex items-center justify-center w-full min-h-screen '>
+    <div className='flex items-center justify-center w-full min-h-screen inset-0 bg-gradient-to-b from-blue-900 to-black opacity-90'>
       <div className='p-12 bg-white/10 backdrop-blur-2xl rounded-xl shadow-lg max-w-md w-full'>
-        <h1 className='text-3xl font-bold text-center text-sky-500 mb-6'>Contact</h1>
+        <h1 className='text-3xl font-bold text-center text-sky-500 mb-6'>Contact Me</h1>
         <form onSubmit={handleSubmit(submitData)} className='space-y-5'>
           <div className='flex gap-4'>
             <Controller

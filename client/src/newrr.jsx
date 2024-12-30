@@ -201,23 +201,19 @@ const ProfessionalProfile = () => {
         <Section title="Summary" Icon={FaUserGraduate}>
           <p className="text-lg leading-relaxed text-gray-300">{user?.summary}</p>
         </Section>
-
-        <Section title="Skills" Icon={FaAward}>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {user?.skills?.map((skill, index) => (
-              <SkillCard key={index} skill={skill} />
-            ))}
-          </div>
-        </Section>
-
-        <Section title="Experience" Icon={FaBriefcase}>
-          <Timeline data={user?.experiences} />
-        </Section>
-
         <Section title="Education" Icon={FaUserGraduate}>
           <Timeline data={user?.educations} />
         </Section>
-
+        <Section title="Experience" Icon={FaBriefcase}>
+          <Timeline data={user?.experiences} />
+        </Section>
+        <Section title="Awards" Icon={FaMedal}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {user?.awards?.map((award, index) => (
+              <AwardCard key={index} award={award} index={index} />
+            ))}
+          </div>
+        </Section>
         <Section title="Certificates" Icon={FaCertificate}>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {user?.certificates?.map((cert, index) => (
@@ -226,14 +222,13 @@ const ProfessionalProfile = () => {
           </div>
         </Section>
 
-        <Section title="Awards" Icon={FaMedal}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {user?.awards?.map((award, index) => (
-              <AwardCard key={index} award={award} index={index} />
+        <Section title="Skills" Icon={FaAward}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {user?.skills?.map((skill, index) => (
+              <SkillCard key={index} skill={skill} />
             ))}
           </div>
         </Section>
-
         <Section title="Publications" Icon={FaBookOpen}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {user?.publications?.map((pub, index) => (

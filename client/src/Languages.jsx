@@ -3,6 +3,7 @@ import { Form, Input, Button, Card, List, message, Modal, Select, Skeleton } fro
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { AppContext } from './App';
+import ProtectedRoute from './protected-route';
 const apiUrl = import.meta.env.VITE_API_URL;
 const LanguageForm = () => {
   const [languages, setLanguages] = useState([]);
@@ -102,6 +103,7 @@ const LanguageForm = () => {
   };
 
   return (
+    <ProtectedRoute>
     <div className="px-3 pt-3 h-full bg-stone-50 min-h-screen">
       <Card bordered={false} title="Languages">
         {fetching ? (
@@ -181,7 +183,7 @@ const LanguageForm = () => {
           </Form.Item>
         </Form>
       </Modal>
-    </div>
+    </div></ProtectedRoute>
   );
 };
 

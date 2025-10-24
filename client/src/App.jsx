@@ -22,9 +22,10 @@ export const AppContext = createContext();
 function App() {
   const token = window.localStorage.getItem('token');
   const [user, setUser] = useState(null);
+  const [loading,setLoading]=useState(false)
 
   return (
-    <AppContext.Provider value={{ user, setUser, token }}>
+    <AppContext.Provider value={{ user, setUser, token,loading,setLoading }}>
       <Router>
         {token && (
           <div className="navbar-container">

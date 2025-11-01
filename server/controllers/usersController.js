@@ -1,6 +1,14 @@
 
 const catchAsync = require('../utils/catchAsync')
 const Users=require('../models/userModel')
+const cloudinary = require('cloudinary').v2;
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 
 const postUser=catchAsync(async(req,res)=>{
@@ -263,4 +271,76 @@ const deleteSkill = catchAsync(async (req, res) => {
   res.status(200).json({ message: 'Skill deleted successfully' });
 });
 
-module.exports={PostAward,PostCertificate,PostEducation,PostExperience,PostLanguage,PostPublication,PostSkill,updateAward,updateCertificate,updateEducation,updateExperience,updateLanguage,updatePublication,updateSkill,updateUser,deleteAward,deleteCertificate,deleteEducation,deleteExperience,deleteLanguage,deletePublication,deleteSkill,deleteUser,getUser,postUser,getAll}
+const updateProfilePicture = catchAsync(async (req, res) => {
+  const userID = req.user._id;
+    
+  // Debug logging
+  console.log('=== Profile Picture Update Controller ===');
+  console.log('User ID:', userID);
+  console.log('Request file:', req.file ? 'File exists' : 'No file');
+  if (req.file) {
+    console.log('File details:', {
+      originalname: req.file.originalname,
+      mimetype: req.file.mimetype,
+      size: req.file.size,
+      path: req.file.path,
+      filename: req.file.filename
+    });
+  }
+  console.log('Request body keys:', Object.keys(req.body));
+  
+  // Check if file was uploaded
+  if (!req.file) {
+    console.log('ERROR: No file in request');
+    console.log('Request headers:', req.headers);
+    return res.status(400).json({ 
+      message: 'No image file provided. Please select an image file.',
+      details: 'The file upload failed. Please ensure you are selecting a valid image file.'
+    });
+  }
+
+  // Get the uploaded file details from multer-storage-cloudinary
+  // multer-storage-cloudinary provides: path (URL), filename (public_id), originalname, etc.
+  const imageUrl = req.file.path;
+  // filename in multer-storage-cloudinary contains the public_id (with folder path if folder is specified)
+  const publicId = req.file.filename || req.file.public_id;
+
+  // Get current user to check if there's an existing profile picture
+  const user = await Users.findById(userID);
+  
+  // If user has an existing profile picture, delete it from Cloudinary
+  if (user && user.profilePicture && user.profilePicture.length > 0 && user.profilePicture[0].publicId) {
+    try {
+      await cloudinary.uploader.destroy(user.profilePicture[0].publicId);
+    } catch (error) {
+      console.log('Error deleting old profile picture:', error);
+      // Continue even if deletion fails
+    }
+  }
+
+  // Update user's profile picture (replace the entire array with new one)
+  const updatedUser = await Users.findOneAndUpdate(
+    { _id: userID },
+    {
+      $set: {
+        profilePicture: [{
+          imageUrl: imageUrl,
+          publicId: publicId,
+        }]
+      }
+    },
+    { new: true }
+  );
+
+  // Safely access profilePicture array
+  const profilePictureData = updatedUser && updatedUser.profilePicture && updatedUser.profilePicture.length > 0 
+    ? updatedUser.profilePicture[0] 
+    : { imageUrl, publicId };
+
+  res.status(200).json({
+    message: 'Profile picture updated successfully',
+    profilePicture: profilePictureData
+  });
+});
+
+module.exports={PostAward,PostCertificate,PostEducation,PostExperience,PostLanguage,PostPublication,PostSkill,updateAward,updateCertificate,updateEducation,updateExperience,updateLanguage,updatePublication,updateSkill,updateUser,updateProfilePicture,deleteAward,deleteCertificate,deleteEducation,deleteExperience,deleteLanguage,deletePublication,deleteSkill,deleteUser,getUser,postUser,getAll}

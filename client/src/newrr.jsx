@@ -42,8 +42,184 @@ const useScrollProgress = () => {
   return completion;
 };
 
+// Enhanced Floating Navigation with Scroll Progress
+const FloatingNav = () => {
+  const [activeSection, setActiveSection] = useState('home');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const scrollProgress = useScrollProgress();
+  
+  const sections = [
+    { id: 'home', label: 'Home', icon: FaUserGraduate },
+    { id: 'experience', label: 'Experience', icon: FaBriefcase },
+    { id: 'skills', label: 'Skills', icon: FaCode },
+    { id: 'education', label: 'Education', icon: FaGraduationCap },
+    { id: 'publications', label: 'Research', icon: FaBookOpen },
+    { id: 'awards', label: 'Awards', icon: FaTrophy },
+  ];
+
+  // Intersection Observer to detect which section is in view
+  useEffect(() => {
+    const observers = [];
+    const options = {
+      root: null,
+      rootMargin: '-50% 0px -50% 0px', // Trigger when section is in the middle of viewport
+      threshold: 0,
+    };
+
+    const handleIntersect = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(handleIntersect, options);
+
+    // Observe all sections
+    sections.forEach((section) => {
+      const element = document.getElementById(section.id);
+      if (element) {
+        observer.observe(element);
+        observers.push(observer);
+      }
+    });
+
+    return () => {
+      observers.forEach((obs) => obs.disconnect());
+    };
+  }, []);
+
+  // Alternative approach using scroll event listener (more compatible)
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + window.innerHeight / 2;
+      
+      let currentSection = 'home';
+      
+      for (const section of sections) {
+        const element = document.getElementById(section.id);
+        if (element) {
+          const offsetTop = element.offsetTop;
+          const offsetHeight = element.offsetHeight;
+          
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            currentSection = section.id;
+            break;
+          }
+        }
+      }
+      
+      // Special case for home section (at the very top)
+      if (scrollPosition < window.innerHeight / 2) {
+        currentSection = 'home';
+      }
+      
+      setActiveSection(currentSection);
+    };
+
+    // Throttle the scroll handler for better performance
+    let ticking = false;
+    const throttledScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', throttledScroll);
+    return () => window.removeEventListener('scroll', throttledScroll);
+  }, []);
+
+  return (
+    <>
+      {/* Mobile Menu Button */}
+      {/* <motion.button
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="fixed top-6 right-6 z-50 lg:hidden bg-black text-white p-3 rounded-xl shadow-2xl"
+        onClick={() => setIsMobileMenuOpen(true)}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <FaBars className="text-lg" />
+      </motion.button> */}
+
+      {/* Desktop Navigation */}
+      <motion.nav
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="hidden lg:flex fixed top-24 right-6 transform z-50"
+      >
+        <div className="bg-white/95 backdrop-blur-lg rounded-2xl px-4 py-3 shadow-2xl border border-gray-200">
+          {/* Scroll Progress Bar */}
+          <div className="absolute -bottom-1 -left-2 h-24 w-0.5 bg-gray-200 rounded-full">
+            <motion.div
+              className="h-full bg-blue-600 rounded-full"
+              initial={{ height: 0 }}
+              animate={{ height: `${scrollProgress}%` }}
+              transition={{ duration: 0.1 }}
+            />
+          </div>
+
+          <div className="flex flex-col items-center space-y-2">
+            {sections.map((section) => {
+              const Icon = section.icon;
+              return (
+                <motion.button
+                  key={section.id}
+                  onClick={() => {
+                    document.getElementById(section.id)?.scrollIntoView({ 
+                      behavior: 'smooth',
+                      block: 'start'
+                    });
+                    setActiveSection(section.id);
+                  }}
+                  className={`relative p-3 rounded-xl transition-all duration-300 group ${
+                    activeSection === section.id
+                      ? 'bg-blue-600 text-white shadow-lg scale-110'
+                      : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
+                  }`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Icon className="text-sm" />
+                  <span className="absolute -right-8 top-1/2 transform -translate-y-1/2 text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity bg-black text-white px-2 py-1 rounded">
+                    {section.label}
+                  </span>
+                  
+                  {/* Active indicator dot */}
+                  {activeSection === section.id && (
+                    <motion.div
+                      className="absolute -top-1 -right-1 w-2 h-2 bg-blue-600 rounded-full"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    />
+                  )}
+                </motion.button>
+              );
+            })}
+          </div>
+        </div>
+      </motion.nav>
+
+      {/* Mobile Navigation */}
+      <MobileNav 
+        isOpen={isMobileMenuOpen} 
+        onClose={() => setIsMobileMenuOpen(false)}
+        activeSection={activeSection}
+        setActiveSection={setActiveSection}
+      />
+    </>
+  );
+};
+
 // Mobile Navigation
-const MobileNav = ({ isOpen, onClose }) => {
+const MobileNav = ({ isOpen, onClose, activeSection, setActiveSection }) => {
   const sections = [
     { id: 'home', label: 'Home', icon: FaUserGraduate },
     { id: 'experience', label: 'Experience', icon: FaBriefcase },
@@ -94,14 +270,38 @@ const MobileNav = ({ isOpen, onClose }) => {
                     <motion.button
                       key={section.id}
                       onClick={() => {
-                        document.getElementById(section.id)?.scrollIntoView({ behavior: 'smooth' });
+                        document.getElementById(section.id)?.scrollIntoView({ 
+                          behavior: 'smooth',
+                          block: 'start'
+                        });
+                        setActiveSection(section.id);
                         onClose();
                       }}
-                      className="w-full flex items-center space-x-3 p-4 rounded-xl hover:bg-gray-50 transition-colors text-left"
+                      className={`w-full flex items-center space-x-3 p-4 rounded-xl transition-colors text-left relative ${
+                        activeSection === section.id
+                          ? 'bg-blue-50 text-blue-600 border border-blue-200'
+                          : 'hover:bg-gray-50 text-gray-700'
+                      }`}
                       whileHover={{ x: 4 }}
                     >
-                      <Icon className="text-gray-600 text-lg" />
-                      <span className="text-gray-700 font-medium">{section.label}</span>
+                      <Icon className={`text-lg ${
+                        activeSection === section.id ? 'text-blue-600' : 'text-gray-600'
+                      }`} />
+                      <span className={`font-medium ${
+                        activeSection === section.id ? 'text-blue-600' : 'text-gray-700'
+                      }`}>
+                        {section.label}
+                      </span>
+                      
+                      {/* Active indicator */}
+                      {activeSection === section.id && (
+                        <motion.div
+                          className="absolute left-2 w-1 h-6 bg-blue-600 rounded-full"
+                          initial={{ scaleY: 0 }}
+                          animate={{ scaleY: 1 }}
+                          transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                        />
+                      )}
                     </motion.button>
                   );
                 })}
@@ -135,87 +335,6 @@ const MobileNav = ({ isOpen, onClose }) => {
         </>
       )}
     </AnimatePresence>
-  );
-};
-
-// Enhanced Floating Navigation with Scroll Progress
-const FloatingNav = () => {
-  const [activeSection, setActiveSection] = useState('home');
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const scrollProgress = useScrollProgress();
-  
-  const sections = [
-    { id: 'home', label: 'Home', icon: FaUserGraduate },
-    { id: 'experience', label: 'Experience', icon: FaBriefcase },
-    { id: 'skills', label: 'Skills', icon: FaCode },
-    { id: 'education', label: 'Education', icon: FaGraduationCap },
-    { id: 'publications', label: 'Research', icon: FaBookOpen },
-    { id: 'awards', label: 'Awards', icon: FaTrophy },
-  ];
-
-  return (
-    <>
-      {/* Mobile Menu Button */}
-      <motion.button
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="fixed top-6 right-6 z-50 lg:hidden bg-black text-white p-3 rounded-xl shadow-2xl"
-        onClick={() => setIsMobileMenuOpen(true)}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        <FaBars className="text-lg" />
-      </motion.button>
-
-      {/* Desktop Navigation */}
-      <motion.nav
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="hidden lg:flex fixed top-24 right-6 transform z-50"
-      >
-        <div className="bg-white/95 backdrop-blur-lg rounded-2xl px-4 py-3 shadow-2xl border border-gray-200">
-          {/* Scroll Progress Bar */}
-          <div className="absolute -bottom-1 -left-2 h-full w-0.5 bg-gray-200 rounded-full">
-            <motion.div
-              className="h-full bg-blue-600 rounded-full"
-              initial={{ height: 0 }}
-              animate={{ height: `${scrollProgress}%` }}
-              transition={{ duration: 0.1 }}
-            />
-          </div>
-
-          <div className="flex flex-col items-center space-y-2">
-            {sections.map((section) => {
-              const Icon = section.icon;
-              return (
-                <motion.button
-                  key={section.id}
-                  onClick={() => {
-                    document.getElementById(section.id)?.scrollIntoView({ behavior: 'smooth' });
-                    setActiveSection(section.id);
-                  }}
-                  className={`relative p-3 rounded-xl transition-all duration-300 group ${
-                    activeSection === section.id
-                      ? 'bg-blue-600 text-white shadow-lg scale-110'
-                      : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
-                  }`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Icon className="text-sm" />
-                  <span className="absolute -right-8 top-1/2 transform -translate-y-1/2 text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity bg-black text-white px-2 py-1 rounded">
-                    {section.label}
-                  </span>
-                </motion.button>
-              );
-            })}
-          </div>
-        </div>
-      </motion.nav>
-
-      {/* Mobile Navigation */}
-      <MobileNav isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
-    </>
   );
 };
 

@@ -1,16 +1,30 @@
 const express=require('express')
-const {  PostAward, PostCertificate, PostEducation, PostExperience, PostLanguage, PostPublication, PostSkill, updateUser, updateAward, updateCertificate, updateEducation, updateExperience, updateLanguage, updatePublication, deleteUser, deleteAward, deleteCertificate, deleteEducation, deleteExperience, deleteLanguage, deletePublication, getUser, postUser, getAll, updateSkill, deleteSkill } = require('../controllers/usersController')
+const {  PostAward, PostCertificate, PostEducation, PostExperience, PostLanguage, PostPublication, PostSkill, updateUser, updateAward, updateCertificate, updateEducation, updateExperience, updateLanguage, updatePublication, deleteUser, deleteAward, deleteCertificate, deleteEducation, deleteExperience, deleteLanguage, deletePublication, getUser, postUser, getAll, updateSkill, deleteSkill, updateProfilePicture } = require('../controllers/usersController')
 const { login, signup, contactUs, protect, restrictTo } = require('../controllers/authController')
 const router=express.Router()
 const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
+// Validate Cloudinary environment variables
+if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+  console.error('ERROR: Cloudinary environment variables are missing!');
+  console.error('Required: CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET');
+}
+
+// Configure Cloudinary with validation
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
+// Verify Cloudinary configuration
+if (cloudinary.config().cloud_name && cloudinary.config().api_key && cloudinary.config().api_secret) {
+  console.log('Cloudinary configured successfully');
+} else {
+  console.error('WARNING: Cloudinary configuration is incomplete');
+}
 
 // Multer storage configuration for Cloudinary
 const storage = new CloudinaryStorage({
@@ -29,6 +43,44 @@ const upload = multer({
   { name: 'image', maxCount: 10 },
   
 ]);
+
+// Multer storage configuration for profile picture (single image)
+const profilePictureStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'profile-pictures', // Folder to store profile pictures in Cloudinary
+    allowedFormats: ['jpg', 'jpeg', 'png'],
+    transformation: [{ width: 400, height: 400, crop: 'fill' }],
+  },
+});
+
+const uploadProfilePicture = multer({
+  storage: profilePictureStorage,
+  limits: { fileSize: 1024 * 1024 * 5 }, // 5MB limit
+  fileFilter: (req, file, cb) => {
+    // Log file information for debugging
+    console.log('File filter - File info:', {
+      fieldname: file.fieldname,
+      originalname: file.originalname,
+      mimetype: file.mimetype,
+      encoding: file.encoding
+    });
+    
+    // Check if file exists
+    if (!file) {
+      return cb(new Error('No file provided'), false);
+    }
+    
+    // Accept only image files
+    if (file.mimetype && file.mimetype.startsWith('image/')) {
+      console.log('File filter - File accepted:', file.mimetype);
+      cb(null, true);
+    } else {
+      console.log('File filter - File rejected:', file.mimetype || 'No mimetype');
+      cb(new Error('Only image files are allowed! File type: ' + (file.mimetype || 'unknown')), false);
+    }
+  }
+}).single('profilePicture');
 
 router.post('/upload',protect,restrictTo("admin"), upload, (req, res) => {
   try {
@@ -73,6 +125,7 @@ router.get('/delete/uploads/:publicId',protect,restrictTo("admin"), async (req, 
 
 // Update route
 router.put('/update',protect,restrictTo("admin"), upload, async (req, res) => {
+  console.log(req.file)
   try {
     const { publicIds } = req.body; // Expect an array of publicIds
     const files = req.files;
@@ -128,6 +181,71 @@ router.route("/post-publication").post(protect,restrictTo("admin"),PostPublicati
 router.route("/post-skill").post(protect,restrictTo("admin"),PostSkill)
 
 router.route("/update-user").put(protect,restrictTo("admin"),updateUser)
+router.route("/update-profile-picture").put(protect, restrictTo("admin"), (req, res, next) => {
+  console.log('=== Profile Picture Upload Middleware ===');
+  console.log('Content-Type:', req.headers['content-type']);
+  console.log('Cloudinary config check:', {
+    cloud_name: cloudinary.config().cloud_name ? 'Set' : 'Missing',
+    api_key: cloudinary.config().api_key ? 'Set' : 'Missing',
+    api_secret: cloudinary.config().api_secret ? 'Set' : 'Missing'
+  });
+  
+  // Check if Cloudinary is properly configured before processing
+  if (!cloudinary.config().cloud_name || !cloudinary.config().api_key || !cloudinary.config().api_secret) {
+    console.error('ERROR: Cloudinary is not properly configured');
+    return res.status(500).json({ 
+      message: 'Server configuration error. Please contact administrator.',
+      details: 'Cloudinary API credentials are missing'
+    });
+  }
+  
+  uploadProfilePicture(req, res, (err) => {
+    if (err) {
+      console.error('Multer error:', err);
+      console.error('Error name:', err.name);
+      console.error('Error message:', err.message);
+      
+      // Handle multer errors
+      if (err instanceof multer.MulterError) {
+        console.error('MulterError code:', err.code);
+        if (err.code === 'LIMIT_FILE_SIZE') {
+          return res.status(400).json({ message: 'File too large. Maximum size is 5MB' });
+        }
+        if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+          return res.status(400).json({ message: 'Unexpected file field. Please use "profilePicture" field name.' });
+        }
+        return res.status(400).json({ message: err.message || 'File upload error occurred' });
+      }
+      
+      // Handle Cloudinary errors (these come as regular errors, not MulterError)
+      if (err.message && err.message.includes('api_key')) {
+        console.error('Cloudinary configuration error:', err.message);
+        return res.status(500).json({ 
+          message: 'Server configuration error. Cloudinary API credentials are missing.',
+          details: 'Please contact the administrator'
+        });
+      }
+      
+      // Handle other errors (like fileFilter errors)
+      console.error('File filter or other error:', err.message);
+      return res.status(400).json({ 
+        message: err.message || 'Invalid file type. Only image files are allowed.',
+        details: err.message
+      });
+    }
+    
+    console.log('Multer processing complete, file:', req.file ? 'exists' : 'missing');
+    if (req.file) {
+      console.log('Uploaded file details:', {
+        originalname: req.file.originalname,
+        mimetype: req.file.mimetype,
+        size: req.file.size,
+        path: req.file.path
+      });
+    }
+    next();
+  });
+}, updateProfilePicture)
 router.route("/update-award/:awardID").put(protect,restrictTo("admin"),updateAward)
 router.route("/update-certificate/:certificateID").put(protect,restrictTo("admin"),updateCertificate)
 router.route("/update-education/:educationID").put(protect,restrictTo("admin"),updateEducation)
